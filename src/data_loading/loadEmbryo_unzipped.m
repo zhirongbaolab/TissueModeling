@@ -1,5 +1,5 @@
 function [embinfo,errors ]...
-    = loadEmbryo_unzipped(file,endtime)
+    = loadEmbryo_unzipped(file,starttime,endtime)
 
 % ----------------------------------------------
 % Given the first file and an int representing the final timepoint,
@@ -9,7 +9,7 @@ function [embinfo,errors ]...
 
 errors=[];
 
-// %templocation='temp_unzip\';
+%templocation='temp_unzip\';
 %{
 %unzip zipfile to temp file
 
@@ -35,18 +35,14 @@ embinfo=[];
 allpoints=[];
 
 %load entire embryo
-templocation=file;
-for t=1:endtime % iterate over all timepoints
+templocation=file{:};
+for t=starttime:endtime % iterate over all timepoints
     
     % load t current, first expecting no file extension
-    nuclei=[templocation,'nuclei\t',num2str(t,'%03d'),'-nuclei'];
-    if ~exist(nuclei)
-        % try the .txt extension if the first file is not found
-           nuclei=[templocation,'nuclei\t',num2str(t,'%03d'),'-nuclei.txt'];
-          if ~exist(nuclei)  
-            errors.nucleiFiles=['expected nuclei file missing time: ',nuclei];
-            return
-          end
+    nuclei=[templocation,num2str(t,'t%d'),'-nuclei'];
+    if ~exist(nuclei, 'file')
+        errors.nucleiFiles=['expected nuclei file missing time: ',nuclei];
+        return
     end
 
 
@@ -74,13 +70,10 @@ for t=1:endtime % iterate over all timepoints
     if(t<endtime)
 
         %load t+1, the time point after this
-        nuclei=[templocation,'nuclei\t',num2str(t+1,'%03d'),'-nuclei'];
+        nuclei=[templocation,num2str(t+1,'t%d'),'-nuclei'];
         if ~exist(nuclei)
-              nuclei=[templocation,'nuclei\t',num2str(t+1,'%03d'),'-nuclei.txt'];
-               if ~exist(nuclei)
-                errors.nucleiFiles=['expected nuclei file missing time: ',nuclei];
-                return
-               end
+            errors.nucleiFiles=['expected nuclei file missing time: ',nuclei];
+            return
         end
 
         % load data from the time point after the current time. cell data, cell names, and their corresponding indices
