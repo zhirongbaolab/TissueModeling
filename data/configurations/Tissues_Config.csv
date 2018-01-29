@@ -1,7 +1,8 @@
-Dataset Name,Object Name,Resource Location,Start Time,End Time
-Si0,Pharynx,/Users/bradenkatzman/Desktop/TissueModeling/data/configurations/tissue_cells/pharynx_cells.txt,247,379
-Si0,Dorsal Left Muscle (DL),/Users/bradenkatzman/Desktop/TissueModeling/data/configurations/tissue_cells/dorsal_left_dl_muscle_cells.txt,214,379
-Si0,Dorsal Right Muscle (DR),/Users/bradenkatzman/Desktop/TissueModeling/data/configurations/tissue_cells/dorsal_right_dr_muscle_cells.txt,212,379
-Si0,Ventral Left Muscle (VL),/Users/bradenkatzman/Desktop/TissueModeling/data/configurations/tissue_cells/ventral_left_vl_muscle_cells.txt,212,379
-Si0,Ventral Right Muscle (VR),/Users/bradenkatzman/Desktop/TissueModeling/data/configurations/tissue_cells/ventral_right_vr_muscle_cells.txt,212,379
-Si0,Hypoderm,/Users/bradenkatzman/Desktop/TissueModeling/data/configurations/tissue_cells/hypoderm_cells.txt,182,379
+Dataset Name,Object Name,Nuclei Resource Location,Tissue Resource Location,Start Time,End Time
+WG,Pharynx,C:\Users\katzmanb\Desktop\TissueModeling\data\input\nuclei_files\,C:\Users\katzmanb\Desktop\TissueModeling\data\configurations\tissue_cells\pharynx_cells.txt,281,360
+WG,Arcade,C:\Users\katzmanb\Desktop\TissueModeling\data\input\nuclei_files\,C:\Users\katzmanb\Desktop\TissueModeling\data\configurations\tissue_cells\arcade_cells.txt,281,360
+WG,Dorsal Left Muscle (DL),C:\Users\katzmanb\Desktop\TissueModeling\data\input\nuclei_files\,C:\Users\katzmanb\Desktop\TissueModeling\data\configurations\tissue_cells\dorsal_left_dl_muscle_cells.txt,281,360
+WG,Dorsal Right Muscle (DR),C:\Users\katzmanb\Desktop\TissueModeling\data\input\nuclei_files\,C:\Users\katzmanb\Desktop\TissueModeling\data\configurations\tissue_cells\dorsal_right_dr_muscle_cells.txt,281,360
+WG,Ventral Left Muscle (VL),C:\Users\katzmanb\Desktop\TissueModeling\data\input\nuclei_files\,C:\Users\katzmanb\Desktop\TissueModeling\data\configurations\tissue_cells\ventral_left_vl_muscle_cells.txt,281,360
+WG,Ventral Right Muscle (VR),C:\Users\katzmanb\Desktop\TissueModeling\data\input\nuclei_files\,C:\Users\katzmanb\Desktop\TissueModeling\data\configurations\tissue_cells\ventral_right_vr_muscle_cells.txt,281,360
+WG,Hypoderm,C:\Users\katzmanb\Desktop\TissueModeling\data\input\nuclei_files\,C:\Users\katzmanb\Desktop\TissueModeling\data\configurations\tissue_cells\hypoderm_cells.txt,281,360
