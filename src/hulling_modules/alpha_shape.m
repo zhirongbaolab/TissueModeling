@@ -1,12 +1,5 @@
+function [shapes] = compute_alpha_shape(pt_cloud_data, a)
 % ALPHA SHAPE
-
-% ----------------------------------------------
-% USAGE
-% 
-%
-%
-% ----------------------------------------------
-
 
 % ----------------------------------------------
 % MATLAB DOCS
@@ -23,4 +16,41 @@
 %  how tight the shape should fit around the pts
 % ----------------------------------------------
 
-function [_] = compute_alpha_shape(pt_cloud)
+% helper vars
+x_idx = 1;
+y_idx = 2;
+z_idx = 3;
+num_coords = 3;
+
+shapes = 0;
+
+for t=1:size(pt_cloud_data, 4)
+
+   % format the spherical data so that all points are combined: dimensions
+   % of pt_cloud are num_pointsXnum_coordsXnum_nucsXnum_frames
+   xyz_coords = cell(size(pt_cloud_data, 1) * size(pt_cloud_data, 3), num_coords);
+   it = 1;
+   for i=1:size(pt_cloud_data, 3)
+      for k=1:size(pt_cloud_data, 1)
+         x = pt_cloud_data(k, x_idx, i, t);
+         y = pt_cloud_data(k, y_idx, i, t);
+         z = pt_cloud_data(k, z_idx, i, t);
+         
+         xyz_coords(it, x_idx) = x;
+         xyz_coords(it, y_idx) = y;
+         xyz_coords(it, z_idx) = z;
+         it = it + 1;
+      end
+   end
+   
+   xyz_coords = cell2mat(xyz_coords);
+   xyz_coords = unique(xyz_coords, 'rows');
+
+   shp = alphaShape(xyz_coords);
+   pc = criticalAlpha(shp,'one-region');
+   shp.Alpha = pc*1.75;
+   plot(shp)
+   
+end
+       
+end
