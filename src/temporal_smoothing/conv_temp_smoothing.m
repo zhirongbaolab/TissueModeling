@@ -1,5 +1,5 @@
 function [temporally_smoothed_pt_cloud] = conv_temp_smoothing(original_pt_cloud)
-fprintf('performing convolutional temporal smoothing using 3x1 moving average kernel');
+fprintf('performing convolutional temporal smoothing using 3x1 moving average kernel\n');
 % helper vars
 offset = 1;
 x_idx = 1;
@@ -218,5 +218,6 @@ temporally_smoothed_pt_cloud = cell(size(original_pt_cloud));
     end
  end
 
+ fprintf('convolutional temporal smoothing complete\n');
  
 end
