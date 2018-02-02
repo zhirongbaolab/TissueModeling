@@ -12,14 +12,14 @@ z_idx = 3;
 diam_idx = 4;
 name_idx = 5;
 num_coords = 3;
-max_diam_expected = 20;
+membrane_offset = 2.81;
 
 % this is a parallel data structure to the original pt_cloud, with the
 % addition of every one nucleus in the original representing a 20x3 matrix
 % in this data structure (3-x,y,z coords / 20 is max diameter expected
 % which corresponds to number of coordinates generate by the spherical
 % expansion. Dimenions = 3x20xmax_num_cellsxnum_frames
-spherically_expanded_pc = cell(300, num_coords, size(pt_cloud_data, 1), size(pt_cloud_data, 3));
+spherically_expanded_pc = cell(500, num_coords, size(pt_cloud_data, 1), size(pt_cloud_data, 3));
 
 % iterate over all frames
 for t=1:size(pt_cloud_data, 3)
@@ -39,7 +39,7 @@ for t=1:size(pt_cloud_data, 3)
        % generate a sphere with the given diameter as the radius (so that
        % it extends beyond the area occupied by the nucleus so as to better
        % approximate the membrane
-       [x_coords_sphere, y_coords_sphere, z_coords_sphere] = sphere(diam);
+       [x_coords_sphere, y_coords_sphere, z_coords_sphere] = sphere;
        x_coords_sphere = x_coords_sphere(:);
        y_coords_sphere = y_coords_sphere(:);
        z_coords_sphere = z_coords_sphere(:);
@@ -48,9 +48,9 @@ for t=1:size(pt_cloud_data, 3)
        % coords so that the nucleus is the center of this sphere
        xyz_coords_sphere_aligned = cell(size(x_coords_sphere, 1), num_coords);
        for k=1:size(x_coords_sphere, 1)
-          xyz_coords_sphere_aligned{k, x_idx} = x_coords_sphere(k) + x;
-          xyz_coords_sphere_aligned{k, y_idx} = y_coords_sphere(k) + y;
-          xyz_coords_sphere_aligned{k, z_idx} = z_coords_sphere(k) + z;
+          xyz_coords_sphere_aligned{k, x_idx} = (x_coords_sphere(k)*(diam/2.0) + membrane_offset) + x;
+          xyz_coords_sphere_aligned{k, y_idx} = (y_coords_sphere(k)*(diam/2.0) + membrane_offset) + y;
+          xyz_coords_sphere_aligned{k, z_idx} = (z_coords_sphere(k)*(diam/2.0) + membrane_offset) + z;
        end
        
        % add these coordinates to the matrix corresponding to the current
