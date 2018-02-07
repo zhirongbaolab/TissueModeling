@@ -2,7 +2,7 @@ function [spherically_expanded_pc] = spherical_expansion(pt_cloud_data)
 % expand the point cloud by treating nuclei as the center of spheres
 % and expanding them by a given radius
 fprintf('expanding pt cloud by spherical interpolating each nuc\n');
-
+tic;
 
 % helper vars
 offset = 1;
@@ -61,6 +61,7 @@ for t=1:size(pt_cloud_data, 3)
 end
 
 fprintf('spherical expansion complete\n');
-
+toc;
+fprintf('\n');
 end
 

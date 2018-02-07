@@ -40,6 +40,11 @@ for t=config_info{1, 5}:config_info{1, 6}
         for i=1:size(cell_names, 1)
             name = cell_names{i, 1};
             
+            % NEEDS TO BE ENCODED AS EXPLICIT RULE IN CONFIG FILE
+            if t >= 336 && (strcmp(name, 'ABaraaapaaa') || strcmp(name, 'ABalpaapaaa'))
+               continue; 
+            end
+           
             % check if the lineage name is part of the pharynx by checking the
             % pharynx names file
             idx = find(strcmp(pharynx_cell_names, name), 1);
@@ -62,18 +67,18 @@ for t=config_info{1, 5}:config_info{1, 6}
         end
     end
 end
-r = 0;
+
 % PART 2 - INTERPOLATE TO LANDMARKS (OPTIONAL, IF MODELING ARCADE CELLS)
 
 % PART 3 - TEMPORALLY SMOOTH THE POINT CLOUDS IN 3 FRAME INCREMENTS
-temporally_smoothed_pc = conv_temp_smoothing(pharynx_nuc_data);
+temporally_smoothed_pc = conv_temp_smoothing(pharynx_nuc_data, 2);
 % visualize_pt_cloud(temporally_smoothed_pc, 'Pharynx nuc temporally smoothed');
 
 % PART 4 - EXPAND POINT CLOUDS
 temporally_smoothed_spherically_expanded_pc = spherical_expansion(temporally_smoothed_pc);
 
 % PART 5 - COMPUTE ALPHA SHAPES ON POINT CLOUDS
-shapes = alpha_shape(temporally_smoothed_spherically_expanded_pc, .9);
+shapes = alpha_shape(temporally_smoothed_spherically_expanded_pc);
 
 % PART 6 - GENERATE OBJ FILES
 output_path = 'C:\Users\katzmanb\Desktop\TissueModeling\data\output\pharynx\';

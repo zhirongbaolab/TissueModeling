@@ -1,4 +1,4 @@
-function [shapes] = compute_alpha_shape(pt_cloud_data, a)
+function [shapes] = compute_alpha_shape(pt_cloud_data)
 % ALPHA SHAPE
 
 % ----------------------------------------------
@@ -49,7 +49,7 @@ for t=1:size(pt_cloud_data, 4)
 
    shp = alphaShape(xyz_coords);
    pc = criticalAlpha(shp,'one-region');
-   shp.Alpha = pc*5;
+   shp.Alpha = pc*15;
    
    % plot alpha shape
    figure(1);
@@ -66,7 +66,7 @@ for t=1:size(pt_cloud_data, 4)
 %     scatter3(xyz_coords(:, x_idx), xyz_coords(:, y_idx), xyz_coords(:, z_idx));
    
     
-    [nf, nv] = reducepatch(p, .1);
+    [nf, nv] = reducepatch(p, .25);
     
     % make faces and vertices into cell object
     C = {nf, nv};
