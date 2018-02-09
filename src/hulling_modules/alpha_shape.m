@@ -26,6 +26,7 @@ shapes = cell(size(pt_cloud_data, 4), 1);
 
 figure(1);
 figure(2);
+figure(3);
 for t=1:size(pt_cloud_data, 4)
    % format the spherical data so that all points are combined: dimensions
    % of pt_cloud are num_pointsXnum_coordsXnum_nucsXnum_frames
@@ -64,17 +65,38 @@ for t=1:size(pt_cloud_data, 4)
 %     h = plot(shp);
 %     set(h, 'FaceColor', 'none');
 %     scatter3(xyz_coords(:, x_idx), xyz_coords(:, y_idx), xyz_coords(:, z_idx));
-   
+
+    % use the Loop subdivision algorithm to subdivide the surface mesh,
+    % creating more uniform parameterization (due to the spherical
+    % expansion algorith, the mesh is highly parameterized at this point,
+    % which high poly count at spheres and large polys among spheres
+    [uniform_v, uniform_f] = LoopSubdivisionLimited(p.Vertices, p.Faces, 2);
     
-    [nf, nv] = reducepatch(p, .25);
+    % smooth the triangulated mesh to remove local variations
+    fv_struct.faces = uniform_f;
+    fv_struct.vertices = uniform_v;
+    fv_struct_smoothed = smoothpatch(fv_struct, 0, 1, 1, 1);
     
-    % make faces and vertices into cell object
-    C = {nf, nv};
-    
-    % plot reduced face shape
+    % plot reduced uniformly parameterized shape
     figure(2);
     clf(figure(2));
-    patch('Faces', nf, 'Vertices', nv, 'FaceColor', 'red')
+    patch('Faces', fv_struct_smoothed.faces,...
+        'Vertices', fv_struct_smoothed.vertices,...
+        'FaceColor', 'red')
+
+    [uniform_smoothed_reduced_f, uniform_smoothed_reduced_v] = ...
+        reducepatch(fv_struct_smoothed.faces,...
+        fv_struct_smoothed.vertices, .1);
+    
+    % make faces and vertices into cell object
+    C = {uniform_smoothed_reduced_f, uniform_smoothed_reduced_v};
+    
+    % plot uniform reduced face shape
+    figure(3);
+    clf(figure(3));
+    patch('Faces', uniform_smoothed_reduced_f, ...
+        'Vertices', uniform_smoothed_reduced_v,...
+        'FaceColor', 'red')
     
     % add shape to cell array
     shapes{t, 1} = C;

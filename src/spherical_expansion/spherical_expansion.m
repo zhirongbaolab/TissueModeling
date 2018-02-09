@@ -48,9 +48,9 @@ for t=1:size(pt_cloud_data, 3)
        % coords so that the nucleus is the center of this sphere
        xyz_coords_sphere_aligned = cell(size(x_coords_sphere, 1), num_coords);
        for k=1:size(x_coords_sphere, 1)
-          xyz_coords_sphere_aligned{k, x_idx} = (x_coords_sphere(k)*(diam/2.0) + membrane_offset) + x;
-          xyz_coords_sphere_aligned{k, y_idx} = (y_coords_sphere(k)*(diam/2.0) + membrane_offset) + y;
-          xyz_coords_sphere_aligned{k, z_idx} = (z_coords_sphere(k)*(diam/2.0) + membrane_offset) + z;
+          xyz_coords_sphere_aligned{k, x_idx} = (x_coords_sphere(k)*((diam/2.0) + membrane_offset)) + x;
+          xyz_coords_sphere_aligned{k, y_idx} = (y_coords_sphere(k)*((diam/2.0) + membrane_offset)) + y;
+          xyz_coords_sphere_aligned{k, z_idx} = (z_coords_sphere(k)*((diam/2.0) + membrane_offset)) + z;
        end
        
        % add these coordinates to the matrix corresponding to the current

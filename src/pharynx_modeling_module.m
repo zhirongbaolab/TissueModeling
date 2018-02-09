@@ -84,12 +84,12 @@ shapes = alpha_shape(temporally_smoothed_spherically_expanded_pc);
 output_path = 'C:\Users\katzmanb\Desktop\TissueModeling\data\output\pharynx\';
 pharynx_str = 'Pharynx_t';
 obj_ext_str = '.obj';
-offset = 19;
+offset = 1;
 emb_time_it = config_info{1, 5};
 for i=1:size(shapes, 1)
     % format the filename
     filename = sprintf('%s%s%s%s', output_path,...
-        pharynx_str, num2str(emb_time_it + offset), obj_ext_str);
+        pharynx_str, num2str(emb_time_it - 1), obj_ext_str);
     
     saveObjFile(filename,...
     shapes{i, 1}{2}, shapes{i, 1}{1});
