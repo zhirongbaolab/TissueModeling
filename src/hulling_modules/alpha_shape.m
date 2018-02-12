@@ -71,31 +71,33 @@ for t=1:size(pt_cloud_data, 4)
     % expansion algorith, the mesh is highly parameterized at this point,
     % which high poly count at spheres and large polys among spheres
     [uniform_v, uniform_f] = LoopSubdivisionLimited(p.Vertices, p.Faces, 2);
-    
-    % smooth the triangulated mesh to remove local variations
-    fv_struct.faces = uniform_f;
-    fv_struct.vertices = uniform_v;
-    fv_struct_smoothed = smoothpatch(fv_struct, 0, 1, 1, 1);
+
     
     % plot reduced uniformly parameterized shape
     figure(2);
     clf(figure(2));
-    patch('Faces', fv_struct_smoothed.faces,...
-        'Vertices', fv_struct_smoothed.vertices,...
+    patch('Faces', uniform_f,...
+        'Vertices', uniform_v,...
         'FaceColor', 'red')
 
-    [uniform_smoothed_reduced_f, uniform_smoothed_reduced_v] = ...
-        reducepatch(fv_struct_smoothed.faces,...
-        fv_struct_smoothed.vertices, .1);
+    [uniform_reduced_f, uniform_reduced_v] = ...
+        reducepatch(uniform_f,...
+        uniform_v, .2);
+    
+    
+    % smooth the triangulated mesh to remove local variations
+    fv_struct.faces = uniform_reduced_f;
+    fv_struct.vertices = uniform_reduced_v;
+    fv_struct_reduced_smoothed = smoothpatch(fv_struct, 0, 1, 1, 1);
     
     % make faces and vertices into cell object
-    C = {uniform_smoothed_reduced_f, uniform_smoothed_reduced_v};
+    C = {fv_struct_reduced_smoothed.faces, fv_struct_reduced_smoothed.vertices};
     
     % plot uniform reduced face shape
     figure(3);
     clf(figure(3));
-    patch('Faces', uniform_smoothed_reduced_f, ...
-        'Vertices', uniform_smoothed_reduced_v,...
+    patch('Faces', fv_struct_reduced_smoothed.faces, ...
+        'Vertices', fv_struct_reduced_smoothed.vertices,...
         'FaceColor', 'red')
     
     % add shape to cell array
