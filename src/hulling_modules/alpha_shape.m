@@ -87,12 +87,9 @@ for t=1:size(pt_cloud_data, 4)
     
     % smooth the more uniform triangulated mesh to remove local variations
     tic;
-    smoothed_uniform_v = taubinsmooth(uniform_f, uniform_v, 10, .5, .53);
+    smoothed_uniform_v = lpflow_trismooth(uniform_v, uniform_f);
     fprintf('smoothed the mesh\n');
     toc;
-%     fv_struct.faces = uniform_f;
-%     fv_struct.vertices = uniform_v;
-%     fv_struct_smoothed = smoothpatch(fv_struct, 0, 1, 1, 1); 
     
     % plot the uniform, smoothed mesh
     figure(3);
@@ -105,9 +102,13 @@ for t=1:size(pt_cloud_data, 4)
     tic;
     [uniform_smoothed_reduced_f, uniform_smoothed_reduced_v] = ...
         reducepatch(uniform_f,...
-        smoothed_uniform_v, .2);
+        smoothed_uniform_v, .5);
     fprintf('reduced the poly count');
     toc;
+    
+    % validate and correct (if necessary) the winding order of the faces
+    uniform_smoothed_reduced_f = correct_poly_winding(...
+        uniform_smoothed_reduced_f, uniform_smoothed_reduced_v);
     
     % make faces and vertices into cell object
     C = {uniform_smoothed_reduced_f, uniform_smoothed_reduced_v};

@@ -39,7 +39,7 @@ for t=1:size(pt_cloud_data, 3)
        % generate a sphere with the given diameter as the radius (so that
        % it extends beyond the area occupied by the nucleus so as to better
        % approximate the membrane
-       [x_coords_sphere, y_coords_sphere, z_coords_sphere] = sphere;
+       [x_coords_sphere, y_coords_sphere, z_coords_sphere] = sphere(5);
        x_coords_sphere = x_coords_sphere(:);
        y_coords_sphere = y_coords_sphere(:);
        z_coords_sphere = z_coords_sphere(:);
