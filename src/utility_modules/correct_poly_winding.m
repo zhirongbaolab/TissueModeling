@@ -61,10 +61,14 @@ function [ uniformly_wound_faces ] = correct_poly_winding(f, v)
 % -------------------------------------------------
 
     %ispolycw
-    if ispolycw([v(f(i, 1), 1) v(f(i, 2), 1) v(f(i, 3), 1)], [v(f(i, 1), 2) v(f(i, 2), 2) v(f(i, 3), 2)])
-       g = 0; 
+    poly_x = [v(f(i, 1), 1) v(f(i, 2), 1) v(f(i, 3), 1)];
+    poly_y = [v(f(i, 1), 2) v(f(i, 2), 2) v(f(i, 3), 2)];
+    if ispolycw(poly_x, poly_y)
+       cw_count = cw_count + 1;
+       uniformly_wound_faces(i, :) = fliplr(f(i, :));
     else
-       h = 0;
+        ccw_count = ccw_count + 1;
+        uniformly_wound_faces(i, :) = f(i, :);
     end
 
     end

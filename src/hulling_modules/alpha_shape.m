@@ -110,13 +110,17 @@ for t=1:size(pt_cloud_data, 4)
     uniform_smoothed_reduced_f = correct_poly_winding(...
         uniform_smoothed_reduced_f, uniform_smoothed_reduced_v);
     
+    % correct any faces that may have inward normals
+    [corrected_faces, ~] = unifyMeshNormals(uniform_smoothed_reduced_f, ...
+        uniform_smoothed_reduced_v, 'alignTo', 'out');
+    
     % make faces and vertices into cell object
-    C = {uniform_smoothed_reduced_f, uniform_smoothed_reduced_v};
+    C = {corrected_faces, uniform_smoothed_reduced_v};
     
     % plot uniform, smoothed, reduced shape
     figure(4);
     clf(figure(4));
-    patch('Faces', uniform_smoothed_reduced_f, ...
+    patch('Faces', corrected_faces, ...
         'Vertices', uniform_smoothed_reduced_v,...
         'FaceColor', 'red')
     
