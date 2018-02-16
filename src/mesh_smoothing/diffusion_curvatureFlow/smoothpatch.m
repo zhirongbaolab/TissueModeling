@@ -80,10 +80,10 @@ if(mode==1)
     % Get the neighbour vertices of each vertice from the face list.
     Ne=vertex_neighbours(FV);
     % Do the curvature weighted smoothing
-    [Vx,Vy,Vz]=smoothpatch_curvature_double(FV.faces(:,1),FV.faces(:,2),FV.faces(:,3),FV.vertices(:,1),FV.vertices(:,2),FV.vertices(:,3),ceil(double(itt)),[double(lambda) double(sigma)],Ne);
+    [Vx,Vy,Vz]=smoothpatch_curvature_double(double(FV.faces(:,1)),double(FV.faces(:,2)),double(FV.faces(:,3)),double(FV.vertices(:,1)),double(FV.vertices(:,2)),double(FV.vertices(:,3)),ceil(double(itt)),[double(lambda) double(sigma)],Ne);
 else
     % Do the umbrella inverse distance weighted smoothing
-    [Vx,Vy,Vz]=smoothpatch_inversedistance_double(FV.faces(:,1),FV.faces(:,2),FV.faces(:,3),FV.vertices(:,1),FV.vertices(:,2),FV.vertices(:,3),ceil(double(itt)),[double(lambda) double(sigma)]);
+    [Vx,Vy,Vz]=smoothpatch_inversedistance_double(double(FV.faces(:,1)),double(FV.faces(:,2)),double(FV.faces(:,3)),double(FV.vertices(:,1)),double(FV.vertices(:,2)),double(FV.vertices(:,3)),ceil(double(itt)),[double(lambda) double(sigma)]);
 end
 
 FV2=FV;

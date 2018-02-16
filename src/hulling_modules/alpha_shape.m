@@ -27,6 +27,7 @@ shapes = cell(size(pt_cloud_data, 4), 1);
 figure(1);
 figure(2);
 figure(3);
+figure(4);
 for t=1:size(pt_cloud_data, 4)
    % format the spherical data so that all points are combined: dimensions
    % of pt_cloud are num_pointsXnum_coordsXnum_nucsXnum_frames
@@ -48,17 +49,19 @@ for t=1:size(pt_cloud_data, 4)
    xyz_coords = cell2mat(xyz_coords);
    xyz_coords = unique(xyz_coords, 'rows');
 
+   tic;
    shp = alphaShape(xyz_coords);
    pc = criticalAlpha(shp,'one-region');
    shp.Alpha = pc*15;
+   fprintf('initial alpha shape computed at time %d\n', t);
+   toc;
    
-   % plot alpha shape
+   pause(.1);
+   
+   % plot the initial alpha shape
    figure(1);
    clf(figure(1));
    p = plot(shp);
-   
-   disp(t);
-   pause(.1);
    
     % plot alpha shape wire frame
 %     figure(2);
@@ -70,31 +73,54 @@ for t=1:size(pt_cloud_data, 4)
     % creating more uniform parameterization (due to the spherical
     % expansion algorith, the mesh is highly parameterized at this point,
     % which high poly count at spheres and large polys among spheres
+    tic;
     [uniform_v, uniform_f] = LoopSubdivisionLimited(p.Vertices, p.Faces, 2);
+    fprintf('subdivided shape\n');
+    toc;
     
-    % smooth the triangulated mesh to remove local variations
-    fv_struct.faces = uniform_f;
-    fv_struct.vertices = uniform_v;
-    fv_struct_smoothed = smoothpatch(fv_struct, 0, 1, 1, 1);
-    
-    % plot reduced uniformly parameterized shape
+    % plot the subdivided (hopefully uniform) shape
     figure(2);
     clf(figure(2));
-    patch('Faces', fv_struct_smoothed.faces,...
-        'Vertices', fv_struct_smoothed.vertices,...
+    patch('Faces', uniform_f,...
+        'Vertices', uniform_v,...
         'FaceColor', 'red')
-
-    [uniform_smoothed_reduced_f, uniform_smoothed_reduced_v] = ...
-        reducepatch(fv_struct_smoothed.faces,...
-        fv_struct_smoothed.vertices, .1);
     
-    % make faces and vertices into cell object
-    C = {uniform_smoothed_reduced_f, uniform_smoothed_reduced_v};
+    % smooth the more uniform triangulated mesh to remove local variations
+    tic;
+    smoothed_uniform_v = lpflow_trismooth(uniform_v, uniform_f);
+    fprintf('smoothed the mesh\n');
+    toc;
     
-    % plot uniform reduced face shape
+    % plot the uniform, smoothed mesh
     figure(3);
     clf(figure(3));
-    patch('Faces', uniform_smoothed_reduced_f, ...
+    patch('Faces', uniform_f,...
+        'Vertices', smoothed_uniform_v,...
+        'FaceColor', 'red')
+    
+    % reduce the uniform, smoothed mesh to a lower poly count shape
+    tic;
+    [uniform_smoothed_reduced_f, uniform_smoothed_reduced_v] = ...
+        reducepatch(uniform_f,...
+        smoothed_uniform_v, .5);
+    fprintf('reduced the poly count');
+    toc;
+    
+    % validate and correct (if necessary) the winding order of the faces
+    uniform_smoothed_reduced_f = correct_poly_winding(...
+        uniform_smoothed_reduced_f, uniform_smoothed_reduced_v);
+    
+    % correct any faces that may have inward normals
+    [corrected_faces, ~] = unifyMeshNormals(uniform_smoothed_reduced_f, ...
+        uniform_smoothed_reduced_v, 'alignTo', 'out');
+    
+    % make faces and vertices into cell object
+    C = {corrected_faces, uniform_smoothed_reduced_v};
+    
+    % plot uniform, smoothed, reduced shape
+    figure(4);
+    clf(figure(4));
+    patch('Faces', corrected_faces, ...
         'Vertices', uniform_smoothed_reduced_v,...
         'FaceColor', 'red')
     

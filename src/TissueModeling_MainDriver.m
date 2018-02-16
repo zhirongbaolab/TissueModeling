@@ -12,13 +12,13 @@
 % location, tissue resource location, start time, end time
 num_tissues = 7;
 num_fields = 6;
-config_info_file_path = 'C:\Users\katzmanb\Desktop\TissueModeling\data\configurations\Tissues_Config.csv';
+config_info_file_path = 'C:\Users\katzmanb\Desktop/TissueModeling/data/configurations/Tissues_Config.csv';
 config_info_file_header_str = 'Dataset Name,Object Name,Nuclei Resource Location,Tissue Resource Location,Start Time,End Time';
 config_info = cell(num_tissues, num_fields);
 fid = fopen(config_info_file_path);
 
 if fid < 0
-    error(['could not open file: ' filename]);
+    error(['could not open file: ' config_info_file_path]);
 end
 
 % iterate until end of file
