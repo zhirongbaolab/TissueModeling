@@ -13,6 +13,8 @@ diam_idx = 4;
 name_idx = 5;
 num_coords = 3;
 membrane_offset = 2.81;
+m5R_membrane_offset = 1.2;
+m5R_lineage_name = 'ABaraapppap';
 
 % this is a parallel data structure to the original pt_cloud, with the
 % addition of every one nucleus in the original representing a 20x3 matrix
@@ -35,6 +37,7 @@ for t=1:size(pt_cloud_data, 3)
        y = pt_cloud_data{i, y_idx, t};
        z = pt_cloud_data{i, z_idx, t};
        diam = pt_cloud_data{i, diam_idx, t};
+       name = pt_cloud_data{i, name_idx, t};
        
        % generate a sphere with the given diameter as the radius (so that
        % it extends beyond the area occupied by the nucleus so as to better
@@ -47,11 +50,21 @@ for t=1:size(pt_cloud_data, 3)
        % offset all generic x,y,z coordinates of the sphere with the nuc
        % coords so that the nucleus is the center of this sphere
        xyz_coords_sphere_aligned = cell(size(x_coords_sphere, 1), num_coords);
-       for k=1:size(x_coords_sphere, 1)
-          xyz_coords_sphere_aligned{k, x_idx} = (x_coords_sphere(k)*((diam/2.0) + membrane_offset)) + x;
-          xyz_coords_sphere_aligned{k, y_idx} = (y_coords_sphere(k)*((diam/2.0) + membrane_offset)) + y;
-          xyz_coords_sphere_aligned{k, z_idx} = (z_coords_sphere(k)*((diam/2.0) + membrane_offset)) + z;
+       
+       if strcmp(name, m5R_lineage_name)
+          for k=1:size(x_coords_sphere, 1)
+            xyz_coords_sphere_aligned{k, x_idx} = (x_coords_sphere(k)*((diam/2.0) + m5R_membrane_offset)) + x;
+            xyz_coords_sphere_aligned{k, y_idx} = (y_coords_sphere(k)*((diam/2.0) + m5R_membrane_offset)) + y;
+            xyz_coords_sphere_aligned{k, z_idx} = (z_coords_sphere(k)*((diam/2.0) + m5R_membrane_offset)) + z;
+          end
+       else
+          for k=1:size(x_coords_sphere, 1)
+            xyz_coords_sphere_aligned{k, x_idx} = (x_coords_sphere(k)*((diam/2.0) + membrane_offset)) + x;
+            xyz_coords_sphere_aligned{k, y_idx} = (y_coords_sphere(k)*((diam/2.0) + membrane_offset)) + y;
+            xyz_coords_sphere_aligned{k, z_idx} = (z_coords_sphere(k)*((diam/2.0) + membrane_offset)) + z;
+          end
        end
+       
        
        % add these coordinates to the matrix corresponding to the current
        % nuc in the data structure spherically_expanded_pc(:, :, i, t)
