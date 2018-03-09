@@ -87,7 +87,7 @@ for t=1:size(pt_cloud_data, 4)
     
     % smooth the more uniform triangulated mesh to remove local variations
     tic;
-    num_smoothing_iterations = 3;
+    num_smoothing_iterations = 2;
     smoothed_uniform_v = uniform_v;
     for i=1:num_smoothing_iterations
         smoothed_uniform_v = lpflow_trismooth(smoothed_uniform_v, uniform_f);
