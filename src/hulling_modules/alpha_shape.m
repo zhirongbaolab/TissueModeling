@@ -87,7 +87,11 @@ for t=1:size(pt_cloud_data, 4)
     
     % smooth the more uniform triangulated mesh to remove local variations
     tic;
-    smoothed_uniform_v = lpflow_trismooth(uniform_v, uniform_f);
+    num_smoothing_iterations = 2;
+    smoothed_uniform_v = uniform_v;
+    for i=1:num_smoothing_iterations
+        smoothed_uniform_v = lpflow_trismooth(smoothed_uniform_v, uniform_f);
+    end
     fprintf('smoothed the mesh\n');
     toc;
     
@@ -99,29 +103,29 @@ for t=1:size(pt_cloud_data, 4)
         'FaceColor', 'red')
     
     % reduce the uniform, smoothed mesh to a lower poly count shape
-    tic;
-    [uniform_smoothed_reduced_f, uniform_smoothed_reduced_v] = ...
-        reducepatch(uniform_f,...
-        smoothed_uniform_v, .5);
-    fprintf('reduced the poly count');
-    toc;
+%    tic;
+%    [uniform_smoothed_reduced_f, uniform_smoothed_reduced_v] = ...
+%        reducepatch(uniform_f,...
+%        smoothed_uniform_v, .5);
+%    fprintf('reduced the poly count');
+%    toc;
     
     % validate and correct (if necessary) the winding order of the faces
-    uniform_smoothed_reduced_f = correct_poly_winding(...
-        uniform_smoothed_reduced_f, uniform_smoothed_reduced_v);
+    uniform_f = correct_poly_winding(...
+        uniform_f, smoothed_uniform_v);
     
     % correct any faces that may have inward normals
-    [corrected_faces, ~] = unifyMeshNormals(uniform_smoothed_reduced_f, ...
-        uniform_smoothed_reduced_v, 'alignTo', 'out');
+    [corrected_faces, ~] = unifyMeshNormals(uniform_f, ...
+        smoothed_uniform_v, 'alignTo', 'out');
     
     % make faces and vertices into cell object
-    C = {corrected_faces, uniform_smoothed_reduced_v};
+    C = {corrected_faces, smoothed_uniform_v};
     
     % plot uniform, smoothed, reduced shape
     figure(4);
     clf(figure(4));
     patch('Faces', corrected_faces, ...
-        'Vertices', uniform_smoothed_reduced_v,...
+        'Vertices', smoothed_uniform_v,...
         'FaceColor', 'red')
     
     % add shape to cell array

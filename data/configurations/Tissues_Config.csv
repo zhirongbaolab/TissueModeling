@@ -1,5 +1,5 @@
 Dataset Name,Object Name,Nuclei Resource Location,Tissue Resource Location,Start Time,End Time
-WG,Pharynx,C:\Users\katzmanb\Desktop\TissueModeling/data/input/nuclei_files/,C:\Users\katzmanb\Desktop/TissueModeling/data/configurations/tissue_cells/pharynx_cells.txt,281,360
+WG,Pharynx,C:\Users\katzmanb\Desktop\TissueModeling/data/input/nuclei_files/,C:\Users\katzmanb\Desktop/TissueModeling/data/configurations/tissue_cells/pharynx_cells.txt,246,360
 WG,Arcade,C:\Users\katzmanb\Desktop/TissueModeling/data/input/nuclei_files/,C:\Users\katzmanb\Desktop/TissueModeling/data/configurations/tissue_cells/arcade_cells.txt,281,360
 WG,Dorsal Left Muscle (DL),C:\Users\katzmanb\Desktop/TissueModeling/data/input/nuclei_files/,C:\Users\katzmanb\Desktop/TissueModeling/data/configurations/tissue_cells/dorsal_left_dl_muscle_cells.txt,281,360
 WG,Dorsal Right Muscle (DR),C:\Users\katzmanb\Desktop/TissueModeling/data/input/nuclei_files/,C:\Users\katzmanb\Desktop/TissueModeling/data/configurations/tissue_cells/dorsal_right_dr_muscle_cells.txt,281,360

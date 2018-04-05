@@ -39,11 +39,6 @@ for t=config_info{1, 5}:config_info{1, 6}
         % iterate over all the cell names
         for i=1:size(cell_names, 1)
             name = cell_names{i, 1};
-            
-            % NEEDS TO BE ENCODED AS EXPLICIT RULE IN CONFIG FILE
-            if t >= 336 && (strcmp(name, 'ABaraaapaaa') || strcmp(name, 'ABalpaapaaa'))
-               continue; 
-            end
            
             % check if the lineage name is part of the pharynx by checking the
             % pharynx names file
