@@ -13,7 +13,7 @@ diam_idx = 4;
 name_idx = 5;
 num_coords = 3;
 membrane_offset = 2.81;
-m5R_membrane_offset = 1.2;
+m5R_membrane_offset = 0.75;
 m5R_lineage_name = 'ABaraapppap';
 
 % this is a parallel data structure to the original pt_cloud, with the
