@@ -1,13 +1,13 @@
-Time,Resource Location,Comments
-230,C:\Users\katzmanb\Desktop\TissueModeling\data\configurations\tissue_cells\hypoderm\hypoderm_230_254.csv,
-255,,
-265,,
-290,,
-306,,
-312,,
-317,,
-321,,
-323,,
-336,,
-350,,
-360,,
+Start Time,End Time,Resource Location,Dimension Y (rows),Dimension X (columns),Comments
+230,254,C:\Users\katzmanb\Desktop\TissueModeling\data\configurations\tissue_cells\hypoderm\hypoderm_230_254.csv,6,10,Major epidermal cells born on posterior dorsal end
+255,264,0,0,0,0
+265,289,0,0,0,0
+290,305,0,0,0,0
+306,311,0,0,0,0
+312,316,0,0,0,0
+317,320,0,0,0,0
+321,322,0,0,0,0
+323,335,0,0,0,0
+336,349,0,0,0,0
+350,359,0,0,0,0
+360,379,0,0,0,0
