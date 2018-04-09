@@ -47,6 +47,7 @@ pharynx_first_file = strcat(config_info{1, 3}, t, num2str(config_info{1, 5}), nu
 [embinfo, errors] = loadEmbryo_unzipped(config_info{1, 3}, config_info{1, 5},  config_info{1, 6});
 
 % PART 2 - call the respective modeling modules
+% TODO make switch case that looks at a command line arg and determines which thing to model 
 pharynx_modeling_module(embinfo, config_info);
 
 
@@ -56,15 +57,5 @@ pharynx_modeling_module(embinfo, config_info);
 % - N represents the maximum amount of cells present at a time point for the tissue 
 %   (in time points with less than this maximum, blank cells will be indicated by -1s)
 % - M represents the number of frames of cells to be modeled  
-
-%
-% dl_muscle_nuc = []
-% dr_muscle_nuc = []
-% vl_muscle_nuc = []
-% vr_muscle_nuc = []
-% hypoderm_nuc = []
-%
-
-% PART 4 - SAVE THIS INFO TO FILE
 
 
