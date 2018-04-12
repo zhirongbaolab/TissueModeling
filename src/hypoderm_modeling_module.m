@@ -1,5 +1,10 @@
 function [] = hypoderm_modeling_module(embinfo)
 
+output_path = '/home/braden/Desktop/MSKCC/TissueModeling/data/output/hypoderm/';
+hypoderm_str = 'Hypoderm_t';
+obj_ext_str = '.obj';
+offset = 1;
+
 % read the hypoderm configuation file: 
 % start time, end time, resource location, dimension y (rows), dimensions x (columns), comments
 hypoderm_config_info_filename = '/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_config.csv';
@@ -23,7 +28,7 @@ while ~feof(fid)
 end
 
 % iterate over the time window segments
-for i = 1:12
+for i = 1:1
     % read the names matrix [nxmx1] for the current window
     % rows, columns, names
     names_mat = cell(str2num(hypoderm_config_info{i, 4}), str2num(hypoderm_config_info{i, 5}));
@@ -271,7 +276,10 @@ for i = 1:12
         it = 1;
         for y=1:size(positions_mat, 1)-1
             for x=1:size(positions_mat, 2)-1
-                
+               if positions_mat{y,x,1} == -1
+                   continue;
+               end
+               
                % idx of the current vertex in the vertices list
                v_idx_curr = ((y-1)*size(positions_mat, 2)) + x;
                
@@ -324,7 +332,7 @@ for i = 1:12
                       
                   % check if v_idx_right is same as v_idx_up_from_down_right
                   % if so, this is the base case square, split it into two
-                  % triangles
+                  % triangles. BASE CASE
                   if v_idx_right == v_idx_up_from_down_right
                       faces(it, 1) = v_idx_curr;
                       faces(it, 2) = v_idx_down;
@@ -337,22 +345,124 @@ for i = 1:12
                       faces(it, 3) = v_idx_right;
                       
                       it = it + 1;
+ 
+                   else
+                      % in this situation, there is a valid position. first,
+                      % look one more above and see if it is the v_idx_right, and
+                      % then just skip over this one for the extended base case
+                      y_itr = y_itr - 1;
+                      if positions_mat{y_itr, x_itr, 1} ~= -1
+                          v_idx_up_from_down_right = ((y_itr-1)*size(positions_mat, 2)) + x_itr;
+                       
+                          % check if v_idx_right is same as v_idx_up_from_down_right
+                          % if so, this is the extended base case square, split it into two
+                          % triangles. EXTENDED BASE CASE
+                          if v_idx_right == v_idx_up_from_down_right
+                              faces(it, 1) = v_idx_curr;
+                              faces(it, 2) = v_idx_down;
+                              faces(it, 3) = v_idx_right;
+                      
+                              it = it + 1;
+                      
+                              faces(it, 1) = v_idx_down;
+                              faces(it, 2) = v_idx_down_right;
+                              faces(it, 3) = v_idx_right;
+                      
+                              it = it + 1;
+                          else
+                              v_idx_up_from_down_right = ((y_itr)*size(positions_mat, 2)) + x_itr;
+                              % if that doesn't work and it's not the same as v_idx_right,
+                              % this is a special case and we need three triangles: |/_\|
+                              % SPECIAL CASE
+                      
+                              % makes 3 special case triangles
+                              faces(it, 1) = v_idx_curr;
+                              faces(it, 2) = v_idx_down;
+                              faces(it, 3) = v_idx_right;
+                       
+                              it = it + 1;
+                    
+                              faces(it, 1) = v_idx_down;
+                              faces(it, 2) = v_idx_right;
+                              faces(it, 3) = v_idx_down_right;
+                       
+                              it = it + 1;
+                       
+                              faces(it, 1) = v_idx_right;
+                              faces(it, 2) = v_idx_down_right;
+                              faces(it, 3) = v_idx_up_from_down_right;
+                       
+                              it = it + 1;
+                              break;
+                          end
+                      end
                   end
                else
-                   % SPECIAL CASES
-                   
-                   
+                   % in this situation, there is no valid position above,
+                   % first, look if there is a valid position one more
+                   % space above, and see if it's in the same row as curr,
+                   % if so, this is just an extension of the base case
+                   % where an empty row is in the middle of the square
+                   y_itr = y_itr - 1;
+                   if positions_mat{y_itr, x_itr, 1} ~= -1
+                      v_idx_up_from_down_right = ((y_itr-1)*size(positions_mat, 2)) + x_itr;
+                       
+                      % check if v_idx_right is same as v_idx_up_from_down_right
+                      % if so, this is the extended base case square, split it into two
+                      % triangles. EXTENDED BASE CASE
+                      if v_idx_right == v_idx_up_from_down_right
+                          faces(it, 1) = v_idx_curr;
+                          faces(it, 2) = v_idx_down;
+                          faces(it, 3) = v_idx_right;
+                      
+                          it = it + 1;
+                      
+                          faces(it, 1) = v_idx_down;
+                          faces(it, 2) = v_idx_down_right;
+                          faces(it, 3) = v_idx_right;
+                      
+                          it = it + 1;
+                      end
+                   else
+                       % if that didn't work,look right from down_right, and if valid, make 3
+                       % triangles: |_\/_|
+                       % SPECIAL CASE
+                       y_itr = y_itr + 1; % move back down
+                       x_itr = x_itr + 1; % move on space to the right
+                       if positions_mat{y_itr, x_itr, 1} ~= -1
+                     
+                           v_idx_right_from_down_right = ((y_itr-1)*size(positions_mat, 2)) + x_itr;
+                       
+                           % makes 3 special case triangles
+                           faces(it, 1) = v_idx_curr;
+                           faces(it, 2) = v_idx_down;
+                           faces(it, 3) = v_idx_down_right;
+                       
+                           it = it + 1;
+                       
+                           faces(it, 1) = v_idx_curr;
+                           faces(it, 2) = v_idx_down_right;
+                           faces(it, 3) = v_idx_right;
+                       
+                           it = it + 1;
+                       
+                           faces(it, 1) = v_idx_down_right;
+                           faces(it, 2) = v_idx_right_from_down_right;
+                           faces(it, 3) = v_idx_right;
+                       
+                           it = it + 1;
+                       end
+                   end
                end
             end 
         end
         
-        
-        
-        % subdivide the mesh
-        
-        % smooth the mesh
+        % remove empty rows from faces list
+        faces = faces(any(faces, 2),:);
         
         % save to obj file with time offset
+        filename = sprintf('%s%s%s%s', output_path, hypoderm_str, num2str(t - offset), obj_ext_str);
+        saveObjFile(filename, vertices, faces);
     end
 end
         
