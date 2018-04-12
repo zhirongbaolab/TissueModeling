@@ -2,7 +2,7 @@ function [] = hypoderm_modeling_module(embinfo)
 
 % read the hypoderm configuation file: 
 % start time, end time, resource location, dimension y (rows), dimensions x (columns), comments
-hypoderm_config_info_filename = 'C:\Users\katzmanb\Desktop\TissueModeling\data\configurations\tissue_cells\hypoderm\hypoderm_config.csv';
+hypoderm_config_info_filename = '/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_config.csv';
 hypoderm_config_info = cell (12, 6);
 fid = fopen(hypoderm_config_info_filename);
 if fid < 0
@@ -139,15 +139,16 @@ for i = 1:12
         % 1. Name --> use position from smoothed model
         % 2. Name; Name --> use midpoint between positions ""
         % 3. Name; Name; Double --> use percentage difference b/w positions ""
+        offset_time = str2num(hypoderm_config_info{i, 1});
         positions_mat = cell(str2num(hypoderm_config_info{i, 4}), str2num(hypoderm_config_info{i, 5}), 3);        
-        hyp_names = temporally_smoothed_hypoderm_nuc_data(:, 5, (t - str2num(hypoderm_config_info{i, 1}) + 1));
+        hyp_names = temporally_smoothed_hypoderm_nuc_data(:, 5, ((t - offset_time) + 1));
         for y=1:str2num(hypoderm_config_info{i, 4})
             for x=1:str2num(hypoderm_config_info{i, 5})
                 str = names_mat{y, x};
                 
                 % check if there are multiple cell names
                 if ~isempty(str) && isempty(strfind(str, ';'))
-                    % CASE 1
+                    % CASE 1 - add the position data
                     lineage_name = str;
                     if ~isempty(strfind(lineage_name, '('))
                         lineage_name = lineage_name(1:strfind(lineage_name, ' (')-1);
@@ -159,36 +160,193 @@ for i = 1:12
                         error(['problems finding idx for ' lineage_name]);
                     end
                     
-                    % query the positional data for this nuc
+                    % gather the positional data for this nuc
+                    x1 = temporally_smoothed_hypoderm_nuc_data{idx, 1, (t - offset_time) + 1};
+                    y1 = temporally_smoothed_hypoderm_nuc_data{idx, 2, (t - offset_time) + 1};
+                    z1 = temporally_smoothed_hypoderm_nuc_data{idx, 3, (t - offset_time) + 1};
                     
                     % add the data to the positions_mat
-                        
+                    positions_mat{y, x, 1} = x1;
+                    positions_mat{y, x, 2} = y1;
+                    positions_mat{y, x, 3} = z1;
+            
                 elseif ~isempty(str) && ~isempty(strfind(str, ';'))
+                    % gather the positional data for the two nucs
                     r = strfind(str, ';');
+                    
+                    lineage_name_1 = str(1:r(1, 1)-1);
+                    if ~isempty(strfind(lineage_name_1, '('))
+                        lineage_name_1 = lineage_name_1(1:strfind(lineage_name_1, ' (')-1);
+                    end
+                        
+                    lineage_name_2 = str(r(1,1)+1:r(1,2)-1);
+                    if ~isempty(strfind(lineage_name_2, '('))
+                        lineage_name_2 = lineage_name_2(1:strfind(lineage_name_2, ' (')-1);
+                    end
+                        
+                    idx_1 = find(strcmp(hyp_names, lineage_name_1), 1);
+                    if isempty(idx_1)
+                        error(['problems finding idx for ' lineage_name_1]);
+                    end
+                        
+                    idx_2 = find(strcmp(hyp_names, lineage_name_2), 1);
+                    if isempty(idx_2)
+                        error(['problems finding idx for ' lineage_name_2]);
+                    end
+                        
+                    % gather the positional data for the nucs
+                    x1 = temporally_smoothed_hypoderm_nuc_data{idx_1, 1, (t - offset_time) + 1};
+                    y1 = temporally_smoothed_hypoderm_nuc_data{idx_1, 2, (t - offset_time) + 1};
+                    z1 = temporally_smoothed_hypoderm_nuc_data{idx_1, 3, (t - offset_time) + 1};
+                        
+                    x2 = temporally_smoothed_hypoderm_nuc_data{idx_2, 1, (t - offset_time) + 1};
+                    y2 = temporally_smoothed_hypoderm_nuc_data{idx_2, 2, (t - offset_time) + 1};
+                    z2 = temporally_smoothed_hypoderm_nuc_data{idx_2, 3, (t - offset_time) + 1};
+                    
                     % if there is just one semicolon
                     if size(r, 2) == 1
-                        % CASE 2
-                        lineage_name_1 = str(1:r{1, 1});
-                        lineage_name_1 = lineage_name_1(1:strfind(lineage_name_1, ' (')-1);
+                        % CASE 2 - add the midpoint between the two positions
                         
-                        lineage
                         
-                        idx = find(strcmp(hyp_names, lineage_name_1), 1);
+                        % compute the midpoint
+                        x_mid = (x1 + x2) / 2;
+                        y_mid = (y1 + y2) / 2;
+                        x_mid = (z1 + z2) / 2;
+                        
+                        % add the data to the positions mat
+                        positions_mat{y, x, 1} = x_mid;
+                        positions_mat{y, x, 2} = y_mid;
+                        positions_mat{y, x, 3} = z_mid;
                         
                     elseif size(r, 2) == 2
-                        % CASE 3  
+                        % CASE 3 - compute specified distance between points
                         
+                        % get the distance percentage value
+                        dist_perc = str2num(str(r(1,2)+1:end));
                         
+                        % calculate the distance between two points
+                        x_sqr = (x2 - x1).^2;
+                        y_sqr = (y2 - y1).^2;
+                        z_sqr = (z2 - z1).^2;
+                        sum = x_sqr + y_sqr + z_sqr;
+                        d = sqrt(sum);
+                        
+                        % compute the desired point
+                        x_perc_dist = ((1 - dist_perc)*x1) + (dist_perc*x2);
+                        y_perc_dist = ((1 - dist_perc)*y1) + (dist_perc*y2);
+                        z_perc_dist = ((1 - dist_perc)*z1) + (dist_perc*z2);
+                        
+                        % add the data to the positions mat
+                        positions_mat{y, x, 1} = x_perc_dist;
+                        positions_mat{y, x, 2} = y_perc_dist;
+                        positions_mat{y, x, 3} = z_perc_dist;
                     end
                     
-                end
-                
+                else
+                        % add empty identifiers to the positions mat
+                        positions_mat{y, x, 1} = -1;
+                        positions_mat{y, x, 2} = -1;
+                        positions_mat{y, x, 3} = -1;
+                end    
             end
         end
-        
-    
 
-        % call the connectivity module to create a mesh
+        % connect up the positions using the deterministic algorithm as
+        % follows:
+        
+        % first, make the vertex list and initialize the faces list
+        vertices = zeros((size(positions_mat, 1) * size(positions_mat, 2)), 3);
+        it = 1;
+        for y=1:size(positions_mat, 1)
+            for x=1:size(positions_mat, 2)
+               vertices(it, 1) = positions_mat{y, x, 1};
+               vertices(it, 2) = positions_mat{y, x, 2};
+               vertices(it, 3) = positions_mat{y, x, 3};
+               it = it + 1;
+            end
+        end
+        faces = zeros(((size(positions_mat, 1) * size(positions_mat, 2)) * 5), 3);
+        
+        % counters for faces list
+        it = 1;
+        for y=1:size(positions_mat, 1)-1
+            for x=1:size(positions_mat, 2)-1
+                
+               % idx of the current vertex in the vertices list
+               v_idx_curr = ((y-1)*size(positions_mat, 2)) + x;
+               
+               % clear the iterators
+               y_itr = 0;
+               x_itr = 0;
+               
+               % look right of current position for non-empty cell
+               for x_itr=x+1:size(positions_mat, 2)
+                   if positions_mat{y, x_itr, 1} ~= -1
+                  
+                       % find the idx in the vertices list that corresponds to
+                       % the position to the right of curr
+                       v_idx_right = ((y-1)*size(positions_mat, 2)) + x_itr;
+                       break;
+                   end
+               end
+                              
+               % look down from current position for non-empty cell
+               for y_itr=y+1:size(positions_mat, 1)
+                   if positions_mat{y_itr, x, 1} ~= -1
+
+                       % find the idx in the vertices list that corresponds to
+                       % the position down from curr
+                       v_idx_down = ((y_itr-1)*size(positions_mat, 2)) + x;
+                       break;
+                   end
+               end
+               
+               
+               % look down and right from current position for non-empty cell
+               for x_itr=x+1:size(positions_mat, 2)
+                  if positions_mat{y_itr, x_itr, 1} ~= -1
+                   
+                       % find the idx in the vertices list that corresponds to
+                       % the position down and right from curr
+                       v_idx_down_right = ((y_itr-1)*size(positions_mat, 2)) + x_itr;
+                       break;
+                   end 
+               end
+               
+               % look up from the position down_right from curr for
+               % non-empty cell
+               y_itr = y_itr - 1;
+               if positions_mat{y_itr, x_itr, 1} ~= -1    
+                  % find the idx in the vertices list that correpsonds
+                  % to the position up from the down_right position
+                  % from curr
+                  v_idx_up_from_down_right = ((y_itr-1)*size(positions_mat, 2)) + x_itr;
+                      
+                  % check if v_idx_right is same as v_idx_up_from_down_right
+                  % if so, this is the base case square, split it into two
+                  % triangles
+                  if v_idx_right == v_idx_up_from_down_right
+                      faces(it, 1) = v_idx_curr;
+                      faces(it, 2) = v_idx_down;
+                      faces(it, 3) = v_idx_right;
+                      
+                      it = it + 1;
+                      
+                      faces(it, 1) = v_idx_down;
+                      faces(it, 2) = v_idx_down_right;
+                      faces(it, 3) = v_idx_right;
+                      
+                      it = it + 1;
+                  end
+               else
+                   % SPECIAL CASES
+                   
+                   
+               end
+            end 
+        end
+        
+        
         
         % subdivide the mesh
         

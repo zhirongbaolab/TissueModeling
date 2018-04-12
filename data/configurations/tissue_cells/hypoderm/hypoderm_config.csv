@@ -1,5 +1,5 @@
 Start Time,End Time,Resource Location,Dimension Y (rows),Dimension X (columns),Comments
-211,235,C:\Users\katzmanb\Desktop\TissueModeling\data\configurations\tissue_cells\hypoderm\hypoderm_211_235.csv,6,10,Major epidermal cells born on posterior dorsal end
+211,235,home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_211_235.csv,6,10,Major epidermal cells born on posterior dorsal end
 236,245,0,0,0,0
 246,270,0,0,0,0
 271,286,0,0,0,0
