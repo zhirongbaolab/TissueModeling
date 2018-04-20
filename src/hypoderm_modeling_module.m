@@ -1,14 +1,14 @@
 function [] = hypoderm_modeling_module(embinfo)
 
-output_path = '/home/braden/Desktop/MSKCC/TissueModeling/data/output/hypoderm/';
+output_path = 'C:\Users\katzmanb\Desktop\TissueModeling/data/output/hypoderm/';
 hypoderm_str = 'Hypoderm_t';
 obj_ext_str = '.obj';
 offset = 1;
 
 % read the hypoderm configuation file: 
 % start time, end time, resource location, dimension y (rows), dimensions x (columns), comments
-hypoderm_config_info_filename = '/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_config.csv';
-hypoderm_config_info = cell (12, 6);
+hypoderm_config_info_filename = 'C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_config.csv';
+hypoderm_config_info = cell (15, 6);
 fid = fopen(hypoderm_config_info_filename);
 if fid < 0
     error(['could not open file: ' hypoderm_config_info_filename]);
@@ -28,7 +28,7 @@ while ~feof(fid)
 end
 
 % iterate over the time window segments
-for i = 1:1
+for i = 1:14
     % read the names matrix [nxmx1] for the current window
     % rows, columns, names
     names_mat = cell(str2num(hypoderm_config_info{i, 4}), str2num(hypoderm_config_info{i, 5}));
@@ -145,6 +145,7 @@ for i = 1:1
         % 2. Name; Name --> use midpoint between positions ""
         % 3. Name; Name; Double --> use percentage difference b/w positions ""
         offset_time = str2num(hypoderm_config_info{i, 1});
+        empty_vert_entry_it = -1;
         positions_mat = cell(str2num(hypoderm_config_info{i, 4}), str2num(hypoderm_config_info{i, 5}), 3);        
         hyp_names = temporally_smoothed_hypoderm_nuc_data(:, 5, ((t - offset_time) + 1));
         for y=1:str2num(hypoderm_config_info{i, 4})
@@ -249,9 +250,10 @@ for i = 1:1
                     
                 else
                         % add empty identifiers to the positions mat
-                        positions_mat{y, x, 1} = -1;
-                        positions_mat{y, x, 2} = -1;
-                        positions_mat{y, x, 3} = -1;
+                        positions_mat{y, x, 1} = empty_vert_entry_it;
+                        positions_mat{y, x, 2} = empty_vert_entry_it;
+                        positions_mat{y, x, 3} = empty_vert_entry_it;
+                        empty_vert_entry_it = empty_vert_entry_it - 1;
                 end    
             end
         end
@@ -276,7 +278,7 @@ for i = 1:1
         it = 1;
         for y=1:size(positions_mat, 1)-1
             for x=1:size(positions_mat, 2)-1
-               if positions_mat{y,x,1} == -1
+               if positions_mat{y,x,1} <= -1
                    continue;
                end
                
@@ -289,7 +291,7 @@ for i = 1:1
                
                % look right of current position for non-empty cell
                for x_itr=x+1:size(positions_mat, 2)
-                   if positions_mat{y, x_itr, 1} ~= -1
+                   if positions_mat{y, x_itr, 1} > -1
                   
                        % find the idx in the vertices list that corresponds to
                        % the position to the right of curr
@@ -300,7 +302,7 @@ for i = 1:1
                               
                % look down from current position for non-empty cell
                for y_itr=y+1:size(positions_mat, 1)
-                   if positions_mat{y_itr, x, 1} ~= -1
+                   if positions_mat{y_itr, x, 1} > -1
 
                        % find the idx in the vertices list that corresponds to
                        % the position down from curr
@@ -311,20 +313,69 @@ for i = 1:1
                
                
                % look down and right from current position for non-empty cell
+               found_down_right = 0;
                for x_itr=x+1:size(positions_mat, 2)
-                  if positions_mat{y_itr, x_itr, 1} ~= -1
+                  if positions_mat{y_itr, x_itr, 1} > -1
                    
                        % find the idx in the vertices list that corresponds to
                        % the position down and right from curr
                        v_idx_down_right = ((y_itr-1)*size(positions_mat, 2)) + x_itr;
+                       found_down_right = 1;
                        break;
                    end 
                end
                
+               
+               % make sure there's actually something to look up from
+               if found_down_right == 0
+                   % the rest of the row was empty, so we're looking at the
+                   % special case: 
+                   % _____
+                   % | / |
+                   % | \ |
+                   % -----
+                   
+                   % right now, should have *current*, *down*, *right*
+                   % need to get *down_down*, *down_down_right*
+                   y_itr = y_itr + 1; % move down a row
+                   x_itr = x; % move x back to the current column
+                   if positions_mat{y_itr, x_itr, 1} > 1
+                      % found down_down
+                      v_idx_down_down = ((y_itr-1)*size(positions_mat, 2)) + x_itr;
+                      
+                      % now grab down_down_right
+                      x_itr = x_itr + 1;
+                      if positions_mat{y_itr, x_itr, 1} > 1
+                         % found down_down_right
+                         v_idx_down_down_right = ((y_itr-1)*size(positions_mat, 2)) + x_itr;
+                         
+                         
+                         % make 3 special case triangles
+                         faces(it, 1) = v_idx_curr;
+                         faces(it, 2) = v_idx_down;
+                         faces(it, 3) = v_idx_right;
+                         
+                         it = it + 1;
+                         
+                         faces(it, 1) = v_idx_right;
+                         faces(it, 2) = v_idx_down;
+                         faces(it, 3) = v_idx_down_down_right;
+                         
+                         it = it + 1;
+                         
+                         faces(it, 1) = v_idx_down;
+                         faces(it, 2) = v_idx_down_down;
+                         faces(it, 3) = v_idx_down_down_right;
+                         
+                         it = it + 1;
+                      end
+                   end
+                   
+               else
                % look up from the position down_right from curr for
                % non-empty cell
                y_itr = y_itr - 1;
-               if positions_mat{y_itr, x_itr, 1} ~= -1    
+               if positions_mat{y_itr, x_itr, 1} > -1    
                   % find the idx in the vertices list that correpsonds
                   % to the position up from the down_right position
                   % from curr
@@ -351,7 +402,7 @@ for i = 1:1
                       % look one more above and see if it is the v_idx_right, and
                       % then just skip over this one for the extended base case
                       y_itr = y_itr - 1;
-                      if positions_mat{y_itr, x_itr, 1} ~= -1
+                      if y_itr > 0 && positions_mat{y_itr, x_itr, 1} > -1
                           v_idx_up_from_down_right = ((y_itr-1)*size(positions_mat, 2)) + x_itr;
                        
                           % check if v_idx_right is same as v_idx_up_from_down_right
@@ -404,7 +455,7 @@ for i = 1:1
                    % if so, this is just an extension of the base case
                    % where an empty row is in the middle of the square
                    y_itr = y_itr - 1;
-                   if positions_mat{y_itr, x_itr, 1} ~= -1
+                   if y_itr > 0 && positions_mat{y_itr, x_itr, 1} > -1
                       v_idx_up_from_down_right = ((y_itr-1)*size(positions_mat, 2)) + x_itr;
                        
                       % check if v_idx_right is same as v_idx_up_from_down_right
@@ -429,7 +480,7 @@ for i = 1:1
                        % SPECIAL CASE
                        y_itr = y_itr + 1; % move back down
                        x_itr = x_itr + 1; % move on space to the right
-                       if positions_mat{y_itr, x_itr, 1} ~= -1
+                       if positions_mat{y_itr, x_itr, 1} > -1
                      
                            v_idx_right_from_down_right = ((y_itr-1)*size(positions_mat, 2)) + x_itr;
                        
@@ -454,15 +505,32 @@ for i = 1:1
                        end
                    end
                end
+               end
             end 
         end
         
         % remove empty rows from faces list
         faces = faces(any(faces, 2),:);
         
+        % subdivide the mesh
+        % [uniform_v, uniform_f] = LoopSubdivisionLimited(vertices, faces, 2);
+        
+        % smooth the mesh
+%         num_smoothing_iterations = 1;
+%         smoothed_v = vertices;
+%         for p=1:num_smoothing_iterations
+%             smoothed_v = lpflow_trismooth(smoothed_v, faces);
+%         end
+%         fprintf('smoothed mesh\n');
+%         toc;
+        
+        % ensure correct poly winding
+        [corrected_faces, ~] = unifyMeshNormals(faces, vertices, 'alignTo', 'out');
+        
+        
         % save to obj file with time offset
         filename = sprintf('%s%s%s%s', output_path, hypoderm_str, num2str(t - offset), obj_ext_str);
-        saveObjFile(filename, vertices, faces);
+        saveObjFile(filename, vertices, corrected_faces);
     end
 end
         
