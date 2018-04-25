@@ -1,13 +1,13 @@
 function [] = hypoderm_modeling_module(embinfo)
 
-output_path = 'C:\Users\katzmanb\Desktop\TissueModeling/data/output/hypoderm/';
+output_path = '/home/braden/Desktop/MSKCC/TissueModeling/data/output/hypoderm/';
 hypoderm_str = 'Hypoderm_t';
 obj_ext_str = '.obj';
 offset = 1;
 
 % read the hypoderm configuation file: 
 % start time, end time, resource location, dimension y (rows), dimensions x (columns), comments
-hypoderm_config_info_filename = 'C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_config.csv';
+hypoderm_config_info_filename = '/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_config.csv';
 hypoderm_config_info = cell (15, 6);
 fid = fopen(hypoderm_config_info_filename);
 if fid < 0
@@ -28,7 +28,7 @@ while ~feof(fid)
 end
 
 % iterate over the time window segments
-for i = 1:14
+for i = 1:15
     % read the names matrix [nxmx1] for the current window
     % rows, columns, names
     names_mat = cell(str2num(hypoderm_config_info{i, 4}), str2num(hypoderm_config_info{i, 5}));
@@ -511,26 +511,58 @@ for i = 1:14
         
         % remove empty rows from faces list
         faces = faces(any(faces, 2),:);
+       
         
-        % subdivide the mesh
-        % [uniform_v, uniform_f] = LoopSubdivisionLimited(vertices, faces, 2);
+        % ---- compute per vertex normals ----
+        TR = triangulation(faces, vertices);
+        u_vert_norms = vertexNormal(TR);
+        
+        % extrude each vertex in the direction of its normal
+        % overcompensate because the smoothing operation will
+        % significantly dilute the shape
+        translation_amount = 14;
+        extruded_verts = zeros(size(vertices));
+        for vert_it=1:size(vertices, 1)
+            if vertices(vert_it, 1) < 0
+                extruded_verts(vert_it, :) = vertices(vert_it, :);
+                continue;
+            end
+            
+            xpos = vertices(vert_it, 1);
+            ypos = vertices(vert_it, 2);
+            zpos = vertices(vert_it, 3);
+            
+            xdir = u_vert_norms(vert_it, 1);
+            ydir = u_vert_norms(vert_it, 2);
+            zdir = u_vert_norms(vert_it, 3);
+            
+            x_extrude = xpos + (translation_amount*xdir);
+            y_extrude = ypos + (translation_amount*ydir);
+            z_extrude = zpos + (translation_amount*zdir);
+            
+            extruded_verts(vert_it, 1) = x_extrude;
+            extruded_verts(vert_it, 2) = y_extrude;
+            extruded_verts(vert_it, 3) = z_extrude;
+        end
         
         % smooth the mesh
 %         num_smoothing_iterations = 1;
-%         smoothed_v = vertices;
+%         smoothed_v = extruded_verts;
 %         for p=1:num_smoothing_iterations
 %             smoothed_v = lpflow_trismooth(smoothed_v, faces);
 %         end
 %         fprintf('smoothed mesh\n');
 %         toc;
         
+
+        
         % ensure correct poly winding
-        [corrected_faces, ~] = unifyMeshNormals(faces, vertices, 'alignTo', 'out');
+        [corrected_faces, ~] = unifyMeshNormals(faces, extruded_verts, 'alignTo', 'out');
         
         
         % save to obj file with time offset
         filename = sprintf('%s%s%s%s', output_path, hypoderm_str, num2str(t - offset), obj_ext_str);
-        saveObjFile(filename, vertices, corrected_faces);
+        saveObjFile(filename, extruded_verts, corrected_faces);
     end
 end
         
