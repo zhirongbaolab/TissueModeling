@@ -1,12 +1,14 @@
-ABpraappaa (hyp4);ABplaappaa (hyp4);0.5,ABpraappap (hyp6);ABplaappap (hyp6);0.5,ABplpappaap (exc_cell),ABarappappa (DB2),ABprpaaaapp (DB3),ABprpappapp (DB4),ABplppapppa (DD3);ABplppapapp (DD4);0.5,ABplppapapp (DA4);ABprppapapp (DA5);0.5,ABplppapppp (DD5),ABplpppapap (hyp7)
-ABpraappaa (hyp4),ABpraapppa (hyp7);ABplpappaap (exc_cell);0.01,ABpraapppa (hyp7),ABpraapppp (hyp7),ABprapaapp (P1/2R),ABprappaaa (P3/4R),ABprappapp (P7/8R),ABprapapap (P9/10R),ABprapappa (P12);ABprpppaaap (DA7);0.01,ABprappppa (hyp7);ABplpppapap (hyp8/9);0.01
+ABpraappaa (hyp4);ABplaappaa (hyp4);0.5,ABpraappap (hyp6);ABplaappap (hyp6);0.5,ABplpappaap (exc_cell),ABarappappa (DB2),ABprpappapp (DB4),ABplppapppa (DD3);ABplppapapp (DD4);0.5,ABplppapapp (DA4);ABprppapapp (DA5);0.5,ABplppapppp (DD5),ABprappppa (hyp7);ABplappppa (hyp7);0.5,ABplpppapap (hyp8/9)
+ABpraappaa (hyp4),ABpraappap (hyp6),ABpraapppa (hyp7),,,,,,,
+ABpraappaa (hyp4);ABarpappap (hyp5);0.5,ABprppaaaaa (SIBDR),ABprppaapap (RIMR),ABpraapppp (hyp7),ABprapaapp (P1/2R),ABprappaaa (P3/4R),ABprappapp (P7/8R),ABprapapap (P9/10R),ABprapappa (P12),ABprappppa (hyp7)
 ABarpappap (hyp5),ABprpaappap (RIBR),,,,,,,,
 ABarpapppa (H0R),ABarpapppp (H1R),ABarpppaap (H2R),ABarppppaa (V1R),ABarppppap (V2R),ABprappapa (V3R),ABarpppppa (V4R),ABprapapaa,ABarpppppp (V6R),ABplpppapap (hyp8/9)
-ABarpaapaa (hyp6),ABarpapapp (hyp6),ABarpaappp (hyp7),Caaaaa (hyp7),Caaaap (hyp7),Caaapa (hyp7),Caaapp (hyp7),Cpapaa (hyp7),Caappd (hyp7),ABplpppapap (hyp8/9)
-ABarpaapaa (hyp6);ABplaaaapa (hyp6);0.33,MSpppppa (DR4_DWB_muscle),MSpppppp (DR6_DBW_muscle),Dppppa (DR12_DBW_muscle),Dppppp (DR14_DBW_muscle),Cpppaap (DR18_DBW_muscle),Cppppaa (DR20_DBW_muscle),Cppppap (DR22_DBW_muscle),Cpppppd (DR24_DBW_muscle),ABplpppapap (hyp8/9)
-ABplaaaapa (hyp6);ABarpaapaa (hyp6);0.33,MSappppa (DL4_DBW_muscle),MSappppp (DL6_DWB_muscle),Dapppa (DL12_DBW_muscle),Dapppp (DL14_DBW_muscle),Cappaap (DL18_DBW_muscle),Capppaa (DL20)DBW_muscle),Capppap (DL22_DBW_muscle),Cappppd (DL24_DBW_muscle),ABplpppapap (hyp8/9)
-ABplaaaapa (hyp6),ABplaaaapp (hyp6),ABarpaappa (hyp7),Cpaaaa (hyp7),Cpaaap (hyp7),Cpaapa (hyp7),Cpaapp (hyp7),Cpappd (hyp7),Cpappv (hyp11),ABplpppapap (hyp8/9)
+ABarpapppa (H0R);ABarpaapaa (hyp6);0.5,ABarpaappp (hyp7),ABarpaappp (hyp7),Caaaaa (hyp7),Caaaap (hyp7),Caaapa (hyp7),Caaapp (hyp7),Cpapaa (hyp7),Caappd (hyp7),
+ABarpaapaa (hyp6),MSpppppa (DR4_DWB_muscle),MSpppppp (DR6_DBW_muscle),Dppppp (DR14_DBW_muscle),Cpppaap (DR18_DBW_muscle),Cppapap (DR_17_DBW_muscle),Cppppaa (DR20_DBW_muscle),Cppppap (DR22_DBW_muscle),Cpppppd (DR24_DBW_muscle),ABplpppapap (hyp8/9)
+ABplaaaapa (hyp6),MSappppa (DL4_DBW_muscle),MSappppp (DL6_DWB_muscle),Dapppp (DL14_DBW_muscle),Cappaap (DL18_DBW_muscle),Capapap (DL17_DBW_muscle),Capppaa (DL20_DBW_muscle),Capppap (DL22_DBW_muscle),Cappppd (DL24_DBW_muscle),ABplpppapap (hyp8/9)
+ABplaaaapa (hyp6);ABplaaappa (H0L);0.5,ABplaaappp (H1L);ABarpppapa (hyp7);0.5,ABarpaappa (hyp7),Cpaaaa (hyp7),Cpaaap (hyp7),Cpaapa (hyp7),Cpaapp (hyp7),Cpapap (hyp7),Cpappd (hyp7),
 ABplaaappa (H0L),ABplaaappp (H1L),ABarppaaap (H2L),ABarppapaa (V1L),ABarppapap (V2L),ABplappapa (V3L),ABarppappa (V4L),ABplapapaa,ABarppappp (V6L),ABplpppapap (hyp8/9)
 ABplaaapap (hyp5),ABplpaappap (RIBL),,,,,,,,
-ABplaappaa (hyp4),ABplaapppa (hyp7);ABplpappaap (exc_cell);0.01,ABplaapppa (hyp7),ABplaapppp (hyp7),ABplapaapp (P1/2L),ABplappaaa (P3/4L),ABplappaap (P5/6L),ABplappapp (P7/8L),ABplapappa (P11);ABplpppaaap (DA6);0.01,ABplappppa (hyp7);ABplpppapap (hyp8/9);0.1
-ABpraappaa (hyp4);ABplaappaa (hyp4);0.5,ABpraappap (hyp6);ABplaappap (hyp6);0.5,ABplpappaap (exc_cell),ABarappappa (DB2),ABprpaaaapp (DB3),ABprpappapp (DB4),ABplppapppa (DD3);ABplppapapp (DD4);0.5,ABplppapapp (DA4);ABprppapapp (DA5);0.5,ABplppapppp (DD5),ABplpppapap (hyp7)
+ABplaaapap (hyp5);ABplaappaa (hyp4);0.5,ABplppaaaaa (SIBDL),ABplppaapap (RIML),ABplaapppp (hyp7),ABplapaapp (P1/2L),ABplappaaa (P3/4L),ABplappaap (P5/6L),ABplappapp (P7/8L),ABplapappa (P11),ABplappppa (hyp7)
+ABplaappaa (hyp4),ABplaappap (hyp6),ABplaapppa (hyp7),,,,,,,
+ABpraappaa (hyp4);ABplaappaa (hyp4);0.5,ABpraappap (hyp6);ABplaappap (hyp6);0.5,ABplpappaap (exc_cell),ABarappappa (DB2),ABprpappapp (DB4),ABplppapppa (DD3);ABplppapapp (DD4);0.5,ABplppapapp (DA4);ABprppapapp (DA5);0.5,ABplppapppp (DD5),ABprappppa (hyp7);ABplappppa (hyp7);0.5,ABplpppapap (hyp8/9)

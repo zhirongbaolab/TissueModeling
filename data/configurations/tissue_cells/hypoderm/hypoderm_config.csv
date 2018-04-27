@@ -1,16 +1,16 @@
 Start Time,End Time,Resource Location,Dimension Y (rows),Dimension X (columns),Comments
-211,235,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_211_235.csv,6,10,Major epidermal cells born on posterior dorsal end
-236,245,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_236_245.csv,6,10,Some rearrangement along ventral left and right edges
-246,270,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_246_270.csv,6,10,Dorsal intercalation
-271,292,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_271_292.csv,8,10,Anterior seam cells enter anterior edge
-293,293,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_293_293.csv,10,10,Leading cells fusing (20%)
-294,294,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_294_294.csv,10,10,Leading cells fusing (40%)
-295,295,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_295_295.csv,10,10,Leading cells fusing (60%)
-296,296,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_296_296.csv,10,10,Leading cells fusing (80%)
-297,297,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_297_297.csv,10,10,Leading cells fuse
-298,298,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_298_298.csv,10,10,hyp6 and anterior hyp7 cells fusing (33%)
-299,299,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_299_299.csv,10,10,hyp6 and anterior hyp7 cells fuse. Pocket fully formed
-300,303,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_300_303.csv,10,10,hyp6 and anterior hyp7 cells fuse. Pocket fully formed
-304,316,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_304_316.csv,12,10,Pocket enclosing
-317,330,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_317_330.csv,12,10,Pocket neuron rearrangement
-331,360,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_331_360.csv,12,10,Fusion at ventral midline (331) - anterior egde encloses head
+211,235,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_211_235.csv,6,10,Major epidermal cells born on posterior dorsal end
+236,245,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_236_245.csv,6,10,Some rearrangement along ventral left and right edges
+246,270,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_246_270.csv,6,10,Dorsal intercalation
+271,292,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_271_292.csv,8,10,Anterior seam cells enter anterior edge
+293,293,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_293_293.csv,10,10,Leading cells fusing (20%)
+294,294,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_294_294.csv,10,10,Leading cells fusing (40%)
+295,295,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_295_295.csv,10,10,Leading cells fusing (60%)
+296,296,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_296_296.csv,10,10,Leading cells fusing (80%)
+297,297,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_297_297.csv,10,10,Leading cells fuse
+298,298,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_298_298.csv,10,10,hyp6 and anterior hyp7 cells fusing (33%)
+299,299,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_299_299.csv,10,10,hyp6 and anterior hyp7 cells fuse. Pocket fully formed
+300,303,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_300_303.csv,10,10,hyp6 and anterior hyp7 cells fuse. Pocket fully formed
+304,316,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_304_316.csv,12,10,Pocket enclosing
+317,330,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_317_330.csv,14,10,Pocket neuron rearrangement
+331,360,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_331_360.csv,14,10,Fusion at ventral midline (331) - anterior egde encloses head

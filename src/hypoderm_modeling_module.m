@@ -1,13 +1,13 @@
 function [] = hypoderm_modeling_module(embinfo)
 
-output_path = '/home/braden/Desktop/MSKCC/TissueModeling/data/output/hypoderm/';
+output_path = 'C:\Users\katzmanb\Desktop\TissueModeling/data/output/hypoderm/';
 hypoderm_str = 'Hypoderm_t';
 obj_ext_str = '.obj';
 offset = 1;
 
 % read the hypoderm configuation file: 
 % start time, end time, resource location, dimension y (rows), dimensions x (columns), comments
-hypoderm_config_info_filename = '/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_config.csv';
+hypoderm_config_info_filename = 'C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_config.csv';
 hypoderm_config_info = cell (15, 6);
 fid = fopen(hypoderm_config_info_filename);
 if fid < 0
@@ -475,33 +475,54 @@ for i = 1:15
                           it = it + 1;
                       end
                    else
-                       % if that didn't work,look right from down_right, and if valid, make 3
-                       % triangles: |_\/_|
-                       % SPECIAL CASE
-                       y_itr = y_itr + 1; % move back down
-                       x_itr = x_itr + 1; % move on space to the right
-                       if positions_mat{y_itr, x_itr, 1} > -1
-                     
-                           v_idx_right_from_down_right = ((y_itr-1)*size(positions_mat, 2)) + x_itr;
-                       
-                           % makes 3 special case triangles
-                           faces(it, 1) = v_idx_curr;
-                           faces(it, 2) = v_idx_down;
-                           faces(it, 3) = v_idx_down_right;
-                       
-                           it = it + 1;
-                       
-                           faces(it, 1) = v_idx_curr;
-                           faces(it, 2) = v_idx_down_right;
-                           faces(it, 3) = v_idx_right;
-                       
-                           it = it + 1;
-                       
-                           faces(it, 1) = v_idx_down_right;
-                           faces(it, 2) = v_idx_right_from_down_right;
-                           faces(it, 3) = v_idx_right;
-                       
-                           it = it + 1;
+                       y_itr = y_itr - 1;
+                       % try one more up
+                       if y_itr > 0 && positions_mat{y_itr, x_itr, 1} > -1
+                          % check if v_idx_right is same as v_idx_up_from_down_right
+                          % if so, this is the extended base case square, split it into two
+                          % triangles. EXTENDED EXTENDED BASE CASE
+                          if v_idx_right == v_idx_up_from_down_right
+                              faces(it, 1) = v_idx_curr;
+                              faces(it, 2) = v_idx_down;
+                              faces(it, 3) = v_idx_right;
+
+                              it = it + 1;
+
+                              faces(it, 1) = v_idx_down;
+                              faces(it, 2) = v_idx_down_right;
+                              faces(it, 3) = v_idx_right;
+
+                              it = it + 1;
+                          end
+                       else
+                           % if that didn't work,look right from down_right, and if valid, make 3
+                           % triangles: |_\/_|
+                           % SPECIAL CASE
+                           y_itr = y_itr + 2; % move back down
+                           x_itr = x_itr + 1; % move one space to the right
+                           if positions_mat{y_itr, x_itr, 1} > -1
+
+                               v_idx_right_from_down_right = ((y_itr-1)*size(positions_mat, 2)) + x_itr;
+
+                               % makes 3 special case triangles
+                               faces(it, 1) = v_idx_curr;
+                               faces(it, 2) = v_idx_down;
+                               faces(it, 3) = v_idx_down_right;
+
+                               it = it + 1;
+
+                               faces(it, 1) = v_idx_curr;
+                               faces(it, 2) = v_idx_down_right;
+                               faces(it, 3) = v_idx_right;
+
+                               it = it + 1;
+
+                               faces(it, 1) = v_idx_down_right;
+                               faces(it, 2) = v_idx_right_from_down_right;
+                               faces(it, 3) = v_idx_right;
+
+                               it = it + 1;
+                           end
                        end
                    end
                end
@@ -520,7 +541,7 @@ for i = 1:15
         % extrude each vertex in the direction of its normal
         % overcompensate because the smoothing operation will
         % significantly dilute the shape
-        translation_amount = 14;
+        translation_amount = 15;
         extruded_verts = zeros(size(vertices));
         for vert_it=1:size(vertices, 1)
             if vertices(vert_it, 1) < 0
