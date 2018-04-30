@@ -44,12 +44,13 @@ end
 t = 't';
 nuc_str = '-nuclei';
 pharynx_first_file = strcat(config_info{1, 3}, t, num2str(config_info{1, 5}), nuc_str);
-[embinfo, errors] = loadEmbryo_unzipped(config_info{1, 3}, config_info{7, 5},  config_info{7, 6});
+[embinfo, errors] = loadEmbryo_unzipped(config_info{1, 3}, config_info{8, 5},  config_info{8, 6});
 
 % PART 2 - call the respective modeling modules
 % TODO make switch case that looks at a command line arg and determines which thing to model 
 %pharynx_modeling_module(embinfo, config_info);
-hypoderm_modeling_module(embinfo);
+% hypoderm_modeling_module(embinfo);
+eggshell_modeling_module(embinfo);
 
 % PART 3 - LOAD TISSUE DATA (tissue specific cells - names, time, diameter, name - at all timepoints)
 % nuc data format is 5xNxM

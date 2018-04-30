@@ -532,6 +532,27 @@ for i = 1:15
         
         % remove empty rows from faces list
         faces = faces(any(faces, 2),:);
+        
+        % 'remove' redundant vertices by updating all face ptrs to 
+        % redundant vertices to their first instance
+        
+        % indices of redundant rows
+        [~, ind] = unique(vertices(:,:), 'rows');
+        sort(ind);
+        
+        % iterate over vertices
+        for itr = 1:size(vertices, 1)
+           % check if row vertex is repeat by checking if index is in unique indices list
+           ismem_flag = ismember(itr, ind);
+           if ~ismem_flag
+               % find the first occurence of this vertex
+               [~, instances] = ismember(vertices, vertices(itr, :), 'rows');
+               first_instance_idx = find(instances, 1, 'first');
+               
+               % change all ptrs at itr in the face list to first_instance_idx
+               faces(faces==itr)=first_instance_idx;
+           end
+        end
        
         
         % ---- compute per vertex normals ----
