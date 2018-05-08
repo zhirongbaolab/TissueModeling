@@ -52,7 +52,13 @@ for t=1:size(pt_cloud_data, 4)
    tic;
    shp = alphaShape(xyz_coords);
    pc = criticalAlpha(shp,'one-region');
-   shp.Alpha = pc*15;
+   if t <= 10
+      shp.Alpha = pc*30;
+   elseif t > 10 && t <= 12
+       shp.Alpha = pc*18;
+   elseif t > 12
+       shp.Alpha = pc*8;
+   end
    fprintf('initial alpha shape computed at time %d\n', t);
    toc;
    
@@ -74,7 +80,7 @@ for t=1:size(pt_cloud_data, 4)
     % expansion algorith, the mesh is highly parameterized at this point,
     % which high poly count at spheres and large polys among spheres
     tic;
-    [uniform_v, uniform_f] = LoopSubdivisionLimited(p.Vertices, p.Faces, 2);
+    [uniform_v, uniform_f] = LoopSubdivisionLimited(p.Vertices, p.Faces, 1);
     fprintf('subdivided shape\n');
     toc;
     
@@ -87,7 +93,7 @@ for t=1:size(pt_cloud_data, 4)
     
     % smooth the more uniform triangulated mesh to remove local variations
     tic;
-    num_smoothing_iterations = 2;
+    num_smoothing_iterations = 1;
     smoothed_uniform_v = uniform_v;
     for i=1:num_smoothing_iterations
         smoothed_uniform_v = lpflow_trismooth(smoothed_uniform_v, uniform_f);
@@ -111,8 +117,8 @@ for t=1:size(pt_cloud_data, 4)
 %    toc;
     
     % validate and correct (if necessary) the winding order of the faces
-    uniform_f = correct_poly_winding(...
-        uniform_f, smoothed_uniform_v);
+%     uniform_f = correct_poly_winding(...
+%         uniform_f, smoothed_uniform_v);
     
     % correct any faces that may have inward normals
     [corrected_faces, ~] = unifyMeshNormals(uniform_f, ...

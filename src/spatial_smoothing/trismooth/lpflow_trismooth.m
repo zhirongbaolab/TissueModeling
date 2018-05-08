@@ -46,7 +46,7 @@ while k<length(xyz)
     if isempty(dist)
         xyzn(k,:)  = NaN;
     end
-    vcorr = sum(vdist/d,1);
+    vcorr = sum(vdist/d,1)/2;
     xyzn(k,:) = xyz(k,:)+vcorr;
 end
 

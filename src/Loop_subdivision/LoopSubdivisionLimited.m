@@ -91,6 +91,13 @@ mnAllEdges(:, 1:2) = sort(mnAllEdges(:, 1:2), 2);
 % - Collect the edges list
 [mnEdges, nul, vnUniqueEdgesIndices] = unique(mnAllEdges(:, 1:2), 'rows'); %#ok<ASGLU>
 
+% remove repeat edges
+for i=1:size(mnEdges, 1)
+   if mnEdges(i, 1) == mnEdges(i, 2)
+      mnEdges(i, 2) = 1; 
+   end
+end
+
 % - Record number of edges
 nNumEdges = size(mnEdges, 1);
 

@@ -553,6 +553,20 @@ for i = 1:15
                faces(faces==itr)=first_instance_idx;
            end
         end
+        
+        % remove rows that don't make a real triangle (i.e. repeated
+        % vertices) --> degenerate triangles
+        for q=1:size(faces, 1)
+            if faces(q, 1) == faces(q, 2) || faces(q, 1) == faces(q, 3) || faces(q, 2) == faces(q, 3)
+               % remove this face
+               faces(q, 1) = 0;
+               faces(q, 2) = 0;
+               faces(q, 3) = 0;
+            end
+        end
+        
+        % remove empty rows from faces list
+        faces = faces(any(faces, 2),:);
        
         
         % ---- compute per vertex normals ----
@@ -587,24 +601,26 @@ for i = 1:15
             extruded_verts(vert_it, 3) = z_extrude;
         end
         
+        [uniform_extruded_v, uniform_f] = LoopSubdivisionLimited(extruded_verts, faces, 0.2); 
+        
         % smooth the mesh
-%         num_smoothing_iterations = 1;
-%         smoothed_v = extruded_verts;
-%         for p=1:num_smoothing_iterations
-%             smoothed_v = lpflow_trismooth(smoothed_v, faces);
-%         end
-%         fprintf('smoothed mesh\n');
-%         toc;
+        num_smoothing_iterations = 1;
+        smoothed_uniform_extruded_v = uniform_extruded_v;
+        for p=1:num_smoothing_iterations
+            smoothed_uniform_extruded_v = lpflow_trismooth(smoothed_uniform_extruded_v, uniform_f);
+        end
+        fprintf('smoothed mesh\n');
+        toc;
         
 
         
         % ensure correct poly winding
-        [corrected_faces, ~] = unifyMeshNormals(faces, extruded_verts, 'alignTo', 'out');
+        [corrected_faces, ~] = unifyMeshNormals(uniform_f, smoothed_uniform_extruded_v, 'alignTo', 'out');
         
         
         % save to obj file with time offset
         filename = sprintf('%s%s%s%s', output_path, hypoderm_str, num2str(t - offset), obj_ext_str);
-        saveObjFile(filename, extruded_verts, corrected_faces);
+        saveObjFile(filename, smoothed_uniform_extruded_v, corrected_faces);
     end
 end
         

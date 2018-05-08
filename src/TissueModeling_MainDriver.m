@@ -1,7 +1,7 @@
 % TissueModeling_MainDriver.m
 % Zhirong Bao Lab, Sloan-Kettering Institute
 % Author: Braden Katzman
-% Created On: January 4, 2017
+% Created On: January 4, 2018
 %
 % This is the main driver for the tissue modeling pipeline for the pharynx, muscle and hypoderm
 % in the C. elegans embryo.
@@ -49,8 +49,9 @@ pharynx_first_file = strcat(config_info{1, 3}, t, num2str(config_info{1, 5}), nu
 % PART 2 - call the respective modeling modules
 % TODO make switch case that looks at a command line arg and determines which thing to model 
 %pharynx_modeling_module(embinfo, config_info);
-% hypoderm_modeling_module(embinfo);
-eggshell_modeling_module(embinfo);
+hypoderm_modeling_module(embinfo);
+%embryo_modeling_module(embinfo);
+%non_outgrowth_modeling_module(embinfo);
 
 % PART 3 - LOAD TISSUE DATA (tissue specific cells - names, time, diameter, name - at all timepoints)
 % nuc data format is 5xNxM
