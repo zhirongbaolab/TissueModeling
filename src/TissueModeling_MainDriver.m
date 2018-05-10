@@ -1,7 +1,7 @@
 % TissueModeling_MainDriver.m
 % Zhirong Bao Lab, Sloan-Kettering Institute
 % Author: Braden Katzman
-% Created On: January 4, 2017
+% Created On: January 4, 2018
 %
 % This is the main driver for the tissue modeling pipeline for the pharynx, muscle and hypoderm
 % in the C. elegans embryo.
@@ -12,7 +12,7 @@
 % location, tissue resource location, start time, end time
 num_tissues = 7;
 num_fields = 6;
-config_info_file_path = 'C:\Users\katzmanb\Desktop/TissueModeling/data/configurations/Tissues_Config.csv';
+config_info_file_path = 'C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/Tissues_Config.csv';
 config_info_file_header_str = 'Dataset Name,Object Name,Nuclei Resource Location,Tissue Resource Location,Start Time,End Time';
 config_info = cell(num_tissues, num_fields);
 fid = fopen(config_info_file_path);
@@ -44,11 +44,14 @@ end
 t = 't';
 nuc_str = '-nuclei';
 pharynx_first_file = strcat(config_info{1, 3}, t, num2str(config_info{1, 5}), nuc_str);
-[embinfo, errors] = loadEmbryo_unzipped(config_info{1, 3}, config_info{1, 5},  config_info{1, 6});
+[embinfo, errors] = loadEmbryo_unzipped(config_info{1, 3}, config_info{8, 5},  config_info{8, 6});
 
 % PART 2 - call the respective modeling modules
-pharynx_modeling_module(embinfo, config_info);
-
+% TODO make switch case that looks at a command line arg and determines which thing to model 
+%pharynx_modeling_module(embinfo, config_info);
+%hypoderm_modeling_module(embinfo);
+embryo_modeling_module(embinfo);
+%non_outgrowth_modeling_module(embinfo);
 
 % PART 3 - LOAD TISSUE DATA (tissue specific cells - names, time, diameter, name - at all timepoints)
 % nuc data format is 5xNxM
@@ -56,15 +59,5 @@ pharynx_modeling_module(embinfo, config_info);
 % - N represents the maximum amount of cells present at a time point for the tissue 
 %   (in time points with less than this maximum, blank cells will be indicated by -1s)
 % - M represents the number of frames of cells to be modeled  
-
-%
-% dl_muscle_nuc = []
-% dr_muscle_nuc = []
-% vl_muscle_nuc = []
-% vr_muscle_nuc = []
-% hypoderm_nuc = []
-%
-
-% PART 4 - SAVE THIS INFO TO FILE
 
 

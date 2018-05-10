@@ -86,6 +86,8 @@ while err>tol && iter<itermax
     
 end%while iter/err
 
+fprintf('itr reached = %d', itr);
+
 end % meannormfilter_smooth_v01
 
 % %%%%%%%%%%%%%%%%%%%%%% SUBFUNCTIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
