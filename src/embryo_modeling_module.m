@@ -37,12 +37,8 @@ if 1
     % temporal smoothing
     temporally_smoothed_pc = conv_temp_smoothing(embryo_nuc_data_251_thru_266, 2);
 
-    % expansion
-    temporally_smoothed_spherically_expanded_pc = spherical_expansion(temporally_smoothed_pc);
-
     % alpha shapes
-    shapes = alpha_shape(temporally_smoothed_spherically_expanded_pc);
-
+    shapes = alpha_shape(temporally_smoothed_pc);
 
     % save the 251 shape as the model for t1-250
     for i=1:250

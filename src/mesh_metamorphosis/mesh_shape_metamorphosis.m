@@ -103,27 +103,27 @@ for itr=1:size(verts_2, 1)
    [~, min_dist_idx] = min(vert_distance_map(:, itr));
    
    % make sure the vertex is unused
-   if ~used_vertices(min_dist_idx, 1)
+    %if ~used_vertices(min_dist_idx, 1)
        % mark that idx used
        used_vertices(min_dist_idx, 1) = 1;
        
        % record the idx of the neighbor
        neighbor_indices(itr, 1) = min_dist_idx;
-   else
-       sorted_col = sort(vert_distance_map(:, itr));
-       sorted_col_itr = 2; % since we know the first one just didn't work
-       found = 0;
-       while ~found
-          k = find(vert_distance_map(:, itr)==sorted_col(sorted_col_itr));
-          if ~used_vertices(k, 1)
-              used_vertices(k, 1) = 1;
-              neighbor_indices(itr) = k;
-              found = 1;
-          else
-              sorted_col_itr = sorted_col_itr + 1;
-          end
-       end
-   end
+%    else
+%        sorted_col = sort(vert_distance_map(:, itr));
+%        sorted_col_itr = 2; % since we know the first one just didn't work
+%        found = 0;
+%        while ~found
+%           k = find(vert_distance_map(:, itr)==sorted_col(sorted_col_itr));
+%           if ~used_vertices(k, 1)
+%               used_vertices(k, 1) = 1;
+%               neighbor_indices(itr) = k;
+%               found = 1;
+%           else
+%               sorted_col_itr = sorted_col_itr + 1;
+%           end
+%        end
+    %end
 end
 
 % iterate over the range between the first frame mesh and the last
