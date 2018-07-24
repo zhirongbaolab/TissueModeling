@@ -51,7 +51,7 @@ pharynx_first_file = strcat(config_info{1, 3}, t, num2str(config_info{1, 5}), nu
 %pharynx_modeling_module(embinfo, config_info);
 %hypoderm_modeling_module(embinfo);
 embryo_modeling_module(embinfo);
-%non_outgrowth_modeling_module(embinfo);
+% non_outgrowth_modeling_module(embinfo);
 
 % PART 3 - LOAD TISSUE DATA (tissue specific cells - names, time, diameter, name - at all timepoints)
 % nuc data format is 5xNxM
