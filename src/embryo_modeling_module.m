@@ -1,6 +1,6 @@
 function [] = embryo_modeling_module(embinfo)
 
-output_path = 'C:\Users\katzmanb\Desktop\TissueModeling/data/output/embryo/';
+output_path = '/home/braden/Desktop/MSKCC/TissueModeling/data/output/embryo/';
 embryo_str = 'embryo_t';
 obj_ext_str = '.obj';
 offset = 1;
@@ -68,19 +68,20 @@ tail_nuc_name_3 = '';
 tail_nuc_name_4 = '';
 tail_nuc_name_5 = '';
 
-head_nuc_name_ref = 'ABarpapapa';
-head_nuc_ref_x = 0;
-head_nuc_ref_y = 0;
-head_nuc_ref_z = 0;
+% use these to fix the erosion problems in the tail
+belly_nuc_ref_to338_name = 'ABalpapappa'; % cell death
+belly_nuc_ref_to338_x = 0;
+belly_nuc_ref_to338_y = 0;
+belly_nuc_ref_to338_z = 0;
 
-middle_nuc_name_ref = 'Ealpa';
-middle_nuc_ref_x = 0;
-middle_nuc_ref_y = 0;
-middle_nuc_ref_z = 0;
+belly_nuc_ref_to360_name = 'ABpraapppa';
+belly_nuc_ref_to360_x = 0;
+belly_nuc_ref_to360_y = 0;
+belly_nuc_ref_to360_z = 0;
 
 % read the embryo configuation file: 
 % start time, end time, resource location, dimension y (rows), dimensions x (columns), comments
-embryo_config_info_filename = 'C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/embryo/embryo_config.csv';
+embryo_config_info_filename = '/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/embryo/embryo_config.csv';
 embryo_config_info = cell (15, 6);
 fid = fopen(embryo_config_info_filename);
 if fid < 0
@@ -337,16 +338,16 @@ for i = 1:5
                        tail_z_5 = z1;
                     end
                     
-                    if strcmp(lineage_name, head_nuc_name_ref)
-                       head_nuc_ref_x = x1;
-                       head_nuc_ref_y = y1;
-                       head_nuc_ref_z = z1;
+                    if strcmp(lineage_name, belly_nuc_ref_to338_name)
+                       belly_nuc_ref_to338_x = x1;
+                       belly_nuc_ref_to338_y = y1;
+                       belly_nuc_ref_to338_z = z1;
                     end
                     
-                    if strcmp(lineage_name, middle_nuc_name_ref)
-                        middle_nuc_ref_x = x1;
-                        middle_nuc_ref_y = y1;
-                        middle_nuc_ref_z = z1;
+                    if strcmp(lineage_name, belly_nuc_ref_to360_name)
+                       belly_nuc_ref_to360_x = x1;
+                       belly_nuc_ref_to360_y = y1;
+                       belly_nuc_ref_to360_z = z1;
                     end
             
                 elseif ~isempty(str) && ~isempty(strfind(str, ';'))
@@ -870,24 +871,31 @@ for i = 1:5
                 nuc_y = uniform_extruded_v(vert_idx, 2);
                 nuc_z = uniform_extruded_v(vert_idx, 3);
                 
-                %if nuc_x > tail_x_2
-                    p1 = [nuc_x nuc_y nuc_z];
-                    p2 = [tail_x_2 tail_y_2 tail_z_2];
-
-                    observations = [p1; p2];
-                    d = pdist(observations);
-
-                    if d <= neighborhood_threshold
-                        tail_verts_indices(ctr) = vert_idx;
-                        ctr = ctr + 1;
-                    end
-                %end
+                nuc = [nuc_x nuc_y nuc_z];
+                tail = [tail_x_2 tail_y_2 tail_z_2];
+                belly_ref = 0;
+                
+                if t < 338
+                    belly_ref = [belly_nuc_ref_to338_x belly_nuc_ref_to338_y belly_nuc_ref_to338_z];
+                elseif t >= 338
+                    belly_ref = [belly_nuc_ref_to360_x belly_nuc_ref_to360_y belly_nuc_ref_to360_z];
+                end
+                
+                nuc_tail_observations = [nuc; tail];
+                d_to_tail = pdist(nuc_tail_observations);
+                
+                nuc_belly_ref_observations = [nuc; belly_ref];
+                d_to_belly_ref = pdist(nuc_belly_ref_observations);
+                
+                if d_to_tail <= neighborhood_threshold && d_to_tail < d_to_belly_ref
+                    tail_verts_indices(ctr) = vert_idx;
+                    ctr = ctr + 1;
+                end
             end
         end
         
         % smooth the mesh
         uniform_extruded_smoothed_v = taubinsmooth(uniform_f, uniform_extruded_v, 25, 0.5, 0.53);
-        
         
         % move the tail verts (that have just been eroded) to their original position
         for idx=1:size(tail_verts_indices)

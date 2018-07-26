@@ -1,13 +1,13 @@
 function [] = hypoderm_modeling_module(embinfo)
 
-output_path = 'C:\Users\katzmanb\Desktop\TissueModeling/data/output/hypoderm/';
+output_path = 'home/braden/Desktop/MSKCC/TissueModeling/data/output/hypoderm/';
 hypoderm_str = 'Hypoderm_t';
 obj_ext_str = '.obj';
 offset = 1;
 
 % read the hypoderm configuation file: 
 % start time, end time, resource location, dimension y (rows), dimensions x (columns), comments
-hypoderm_config_info_filename = 'C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_config.csv';
+hypoderm_config_info_filename = 'home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/hypoderm/hypoderm_config.csv';
 hypoderm_config_info = cell (15, 6);
 fid = fopen(hypoderm_config_info_filename);
 if fid < 0

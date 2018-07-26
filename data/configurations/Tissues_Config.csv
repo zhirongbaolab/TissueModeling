@@ -1,9 +1,9 @@
 Dataset Name,Object Name,Nuclei Resource Location,Tissue Resource Location,Start Time,End Time
-WG,Pharynx,C:\Users\katzmanb\Desktop\TissueModeling/data/input/nuclei_files/,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/pharynx_cells.txt,246,360
-WG,Arcade,C:\Users\katzmanb\Desktop\TissueModeling/data/input/nuclei_files/,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/arcade_cells.txt,281,360
-WG,Dorsal Left Muscle (DL),C:\Users\katzmanb\Desktop\TissueModeling/data/input/nuclei_files/,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/dorsal_left_dl_muscle_cells.txt,281,360
-WG,Dorsal Right Muscle (DR),C:\Users\katzmanb\Desktop\TissueModeling/data/input/nuclei_files/,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/dorsal_right_dr_muscle_cells.txt,281,360
-WG,Ventral Left Muscle (VL),C:\Users\katzmanb\Desktop\TissueModeling/data/input/nuclei_files/,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/ventral_left_vl_muscle_cells.txt,281,360
-WG,Ventral Right Muscle (VR),C:\Users\katzmanb\Desktop\issueModeling/data/input/nuclei_files/,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/ventral_right_vr_muscle_cells.txt,281,360
-WG,Hypoderm,C:\Users\katzmanb\Desktop\TissueModeling/data/input/nuclei_files/,C:\Users\katzmanb\Desktop\TissueModeling/data/input/nuclei_files/,211,360
-WG,Eggshell,C:\Users\katzmanb\Desktop\TissueModeling/data/input/nuclei_files/,C:\Users\katzmanb\Desktop\TissueModeling/data/input/nuclei_files/,251,360
+WG,Pharynx,/home/braden/Desktop/MSKCC/TissueModeling/data/input/nuclei_files/,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/pharynx_cells.txt,246,360
+WG,Arcade,/home/braden/Desktop/MSKCC/TissueModeling/data/input/nuclei_files/,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/arcade_cells.txt,281,360
+WG,Dorsal Left Muscle (DL),/home/braden/Desktop/MSKCC/TissueModeling/data/input/nuclei_files/,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/dorsal_left_dl_muscle_cells.txt,281,360
+WG,Dorsal Right Muscle (DR),/home/braden/Desktop/MSKCC/TissueModeling/data/input/nuclei_files/,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/dorsal_right_dr_muscle_cells.txt,281,360
+WG,Ventral Left Muscle (VL),/home/braden/Desktop/MSKCC/TissueModeling/data/input/nuclei_files/,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/ventral_left_vl_muscle_cells.txt,281,360
+WG,Ventral Right Muscle (VR),/home/braden/Desktop/MSKCC/TissueModeling/data/input/nuclei_files/,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/ventral_right_vr_muscle_cells.txt,281,360
+WG,Hypoderm,/home/braden/Desktop/MSKCC/TissueModeling/data/input/nuclei_files/,/home/braden/Desktop/MSKCC/TissueModeling/data/input/nuclei_files/,211,360
+WG,Eggshell,/home/braden/Desktop/MSKCC/TissueModeling/data/input/nuclei_files/,/home/braden/Desktop/MSKCC/TissueModeling/data/input/nuclei_files/,251,360

@@ -1,6 +1,6 @@
 Start Time,End Time,Resource Location,Dimension Y (rows),Dimension X (columns),Comments
-267,289,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/embryo/embryo_267_289.csv,10,12,-
-290,305,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/embryo/embryo_290_305.csv,10,11,-
-306,339,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/embryo/embryo_306_339.csv,14,11,-
-340,350,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/embryo/embryo_340_350.csv,14,11,-
-351,360,C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/embryo/embryo_351_360.csv,14,11,-
+267,289,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/embryo/embryo_267_289.csv,10,12,-
+290,305,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/embryo/embryo_290_305.csv,10,11,-
+306,339,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/embryo/embryo_306_339.csv,14,11,-
+340,350,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/embryo/embryo_340_350.csv,14,11,-
+351,360,/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/embryo/embryo_351_360.csv,14,11,-
