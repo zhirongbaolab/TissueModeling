@@ -7,12 +7,12 @@
 % establishing dense correspondence and interpolating between frames
 
 % vars
-start_frame_mesh_filename = '/home/braden/Desktop/MSKCC/TissueModeling/data/output/embryo/embryo_t265.obj';
-end_frame_mesh_filename = '/home/braden/Desktop/MSKCC/TissueModeling/data/output/embryo/embryo_t289.obj';
+start_frame_mesh_filename = 'C:\Users\katzmanb\Desktop\TissueModeling/data/output/embryo/embryo_t265.obj';
+end_frame_mesh_filename = 'C:\Users\katzmanb\Desktop\TissueModeling/data/output/embryo/embryo_t289.obj';
 
 start_time = 265;
 end_time = 289;
-output_path = '/home/braden/Desktop/MSKCC/TissueModeling\data\output\embryo\';
+output_path = 'C:\Users\katzmanb\Desktop\TissueModeling\data\output\embryo\';
 embryo_str = 'embryo_t';
 obj_ext_str = '.obj';
 

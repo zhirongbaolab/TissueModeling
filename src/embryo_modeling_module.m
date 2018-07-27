@@ -1,6 +1,6 @@
 function [] = embryo_modeling_module(embinfo)
 
-output_path = '/home/braden/Desktop/MSKCC/TissueModeling/data/output/embryo/';
+output_path = 'C:\Users\katzmanb\Desktop\TissueModeling/data/output/embryo/';
 embryo_str = 'embryo_t';
 obj_ext_str = '.obj';
 offset = 1;
@@ -69,19 +69,24 @@ tail_nuc_name_4 = '';
 tail_nuc_name_5 = '';
 
 % use these to fix the erosion problems in the tail
-belly_nuc_ref_to338_name = 'ABalpapappa'; % cell death
-belly_nuc_ref_to338_x = 0;
-belly_nuc_ref_to338_y = 0;
-belly_nuc_ref_to338_z = 0;
+AIAL = 'ABplppaappa';
+AIAL_x = 0;
+AIAL_y = 0;
+AIAL_z = 0;
 
-belly_nuc_ref_to360_name = 'ABpraapppa';
-belly_nuc_ref_to360_x = 0;
-belly_nuc_ref_to360_y = 0;
-belly_nuc_ref_to360_z = 0;
+hyp10 = 'ABprppppppp'; %hyp10
+hyp10_x = 0;
+hyp10_y = 0;
+hyp10_z = 0;
+
+siavr = 'ABprpapappa'; % siavr
+siavr_x = 0;
+siavr_y = 0;
+siavr_z = 0;
 
 % read the embryo configuation file: 
 % start time, end time, resource location, dimension y (rows), dimensions x (columns), comments
-embryo_config_info_filename = '/home/braden/Desktop/MSKCC/TissueModeling/data/configurations/tissue_cells/embryo/embryo_config.csv';
+embryo_config_info_filename = 'C:\Users\katzmanb\Desktop\TissueModeling/data/configurations/tissue_cells/embryo/embryo_config.csv';
 embryo_config_info = cell (15, 6);
 fid = fopen(embryo_config_info_filename);
 if fid < 0
@@ -336,18 +341,6 @@ for i = 1:5
                        tail_x_5 = x1;
                        tail_y_5 = y1;
                        tail_z_5 = z1;
-                    end
-                    
-                    if strcmp(lineage_name, belly_nuc_ref_to338_name)
-                       belly_nuc_ref_to338_x = x1;
-                       belly_nuc_ref_to338_y = y1;
-                       belly_nuc_ref_to338_z = z1;
-                    end
-                    
-                    if strcmp(lineage_name, belly_nuc_ref_to360_name)
-                       belly_nuc_ref_to360_x = x1;
-                       belly_nuc_ref_to360_y = y1;
-                       belly_nuc_ref_to360_z = z1;
                     end
             
                 elseif ~isempty(str) && ~isempty(strfind(str, ';'))
@@ -821,16 +814,7 @@ for i = 1:5
         % extrude each vertex in the direction of its normal
         % overcompensate because the smoothing operation will
         % significantly dilute the shape
-        translation_amount = 0;
-        if i == 1
-           translation_amount = 21; 
-        elseif i == 2 || i == 3
-            translation_amount = 20;
-        elseif i == 4
-            translation_amount = 19;
-        elseif i == 5
-            translation_amount = 18;
-        end
+        translation_amount = 27;
         extruded_verts = zeros(size(vertices));
         for vert_it=1:size(vertices, 1)
             if vertices(vert_it, 1) < 0
@@ -867,30 +851,122 @@ for i = 1:5
         if t >= 311 && tail_indices_2(1, 1) ~= 0
            neighborhood_threshold = 20;
             for vert_idx=1:size(uniform_extruded_v)
-                nuc_x = uniform_extruded_v(vert_idx, 1);
-                nuc_y = uniform_extruded_v(vert_idx, 2);
-                nuc_z = uniform_extruded_v(vert_idx, 3);
+                vert_x = uniform_extruded_v(vert_idx, 1);
+                vert_y = uniform_extruded_v(vert_idx, 2);
+                vert_z = uniform_extruded_v(vert_idx, 3);
                 
-                nuc = [nuc_x nuc_y nuc_z];
+                nuc = [vert_x vert_y vert_z];
                 tail = [tail_x_2 tail_y_2 tail_z_2];
-                belly_ref = 0;
-                
-                if t < 338
-                    belly_ref = [belly_nuc_ref_to338_x belly_nuc_ref_to338_y belly_nuc_ref_to338_z];
-                elseif t >= 338
-                    belly_ref = [belly_nuc_ref_to360_x belly_nuc_ref_to360_y belly_nuc_ref_to360_z];
-                end
                 
                 nuc_tail_observations = [nuc; tail];
                 d_to_tail = pdist(nuc_tail_observations);
                 
-                nuc_belly_ref_observations = [nuc; belly_ref];
-                d_to_belly_ref = pdist(nuc_belly_ref_observations);
-                
-                if d_to_tail <= neighborhood_threshold && d_to_tail < d_to_belly_ref
+                if d_to_tail <= neighborhood_threshold
+                   if t >= 340
+                   % need some more reference cells here so we'll use the
+                   % embinfo
+                   cell_data_atT = embinfo(t).celldata;
+                   cell_names = embinfo(t).cellnames;
+                   
+                   for g=1:size(cell_names, 1)
+                      name = cell_names{g, 1};
+                      
+                      if strcmp(name, AIAL)
+                          cell_data = cell_data_atT(g, :);
+                          AIAL_x = cell_data(4);
+                          AIAL_y = cell_data(5);
+                          AIAL_z = cell_data(6);
+                      end
+                      
+                      if strcmp(name, hyp10)
+                         cell_data = cell_data_atT(g, :);
+                         hyp10_x = cell_data(4);
+                         hyp10_y = cell_data(5);
+                         hyp10_z = cell_data(6);
+                      end
+                      
+                      if strcmp(name, siavr)
+                         siavr_x = cell_data(4);
+                         siavr_y = cell_data(5);
+                         siavr_z = cell_data(6);
+                      end
+                   end
+                   
+                   AIAL_pt = [AIAL_x AIAL_y AIAL_z];
+                   hyp10_pt = [hyp10_x hyp10_y hyp10_z];
+                   
+                   nuc_AIAL = [nuc; AIAL_pt];
+                   nuc_hyp10 = [nuc; hyp10_pt];
+                   
+                   d_to_aial = pdist(nuc_AIAL);
+                   d_to_hyp10 = pdist(nuc_hyp10);
+                   
+                   aial_to_tail = [AIAL_pt; tail];
+                   d_aial_to_tail = pdist(aial_to_tail);
+                   
+                  
+                  % specific problems starting at t=344 wrp belly verts falling within neighbood of tail
+                  % we'll use a belly reference (SIAVR) and extrude it to
+                  % use as a delineator
+                  if t >= 344
+                      % first find the nearest neighbor to siavr
+                      min_distance = 1000;
+                      min_neighbor_idx = -1;
+                      for v_id=1:size(uniform_extruded_v)
+                         vx = uniform_extruded_v(v_id, 1);
+                         vy = uniform_extruded_v(v_id, 2);
+                         vz = uniform_extruded_v(v_id, 3);
+                         
+                         % make obsv and compute distance
+                         vxyz = [vx vy vz];
+                         siavr_pt = [siavr_x siavr_y siavr_z];
+                         obsvervation = [vxyz; siavr_pt];
+                         d_ = pdist(obsvervation);
+                         if d_ < min_distance 
+                            min_distance = d_;
+                            min_neighbor_idx = v_id;
+                         end
+                      end
+                      
+                      % use the nearest neighbor to find a vertex normal,
+                      % and use that to extrude SIAVR
+                      % ---- compute per vertex normals ----
+                      TR = triangulation(uniform_f, uniform_extruded_v);
+                      u_vert_norms = vertexNormal(TR);
+                      
+                      xdir = u_vert_norms(min_neighbor_idx, 1);
+                      ydir = u_vert_norms(min_neighbor_idx, 2);
+                      zdir = u_vert_norms(min_neighbor_idx, 3);
+                      
+                      x_extrude_siavr = siavr_x + (30*xdir);
+                      y_extrude_siavr = siavr_y + (30*ydir);
+                      z_extrude_siavr = siavr_z + (30*zdir);
+                      siavr_extruded = [x_extrude_siavr y_extrude_siavr z_extrude_siavr];
+                      
+                      nuc_extruded_siavr = [nuc; siavr_extruded];
+                      d_ = pdist(nuc_extruded_siavr);
+                      if d_to_hyp10 < d_
+                          tail_verts_indices(ctr) = vert_idx;
+                           ctr = ctr + 1;
+                      end
+                  end
+                   if d_to_tail < d_to_hyp10
+                        % either between hyp10 and tail, and closer to tail, or
+                        % anterior to the tail
+                        if d_to_aial > d_to_hyp10
+                           % it's between the tail and hyp10, move it to the tail
+                           tail_verts_indices(ctr) = vert_idx;
+                           ctr = ctr + 1;
+                        end
+                   else
+                       tail_verts_indices(ctr) = vert_idx;
+                       ctr = ctr + 1;
+                   end
+                else
                     tail_verts_indices(ctr) = vert_idx;
-                    ctr = ctr + 1;
+                    ctr = ctr + 1;       
                 end
+            end
             end
         end
         
@@ -903,9 +979,10 @@ for i = 1:5
               break; 
            end
            
-           uniform_extruded_smoothed_v(tail_verts_indices(idx), 1) = tail_x_2;
-           uniform_extruded_smoothed_v(tail_verts_indices(idx), 2) = tail_y_2;
-           uniform_extruded_smoothed_v(tail_verts_indices(idx), 3) = tail_z_2;
+           % reset these verts to their pre-smoothed position
+           uniform_extruded_smoothed_v(tail_verts_indices(idx), 1) = uniform_extruded_v(tail_verts_indices(idx), 1);
+           uniform_extruded_smoothed_v(tail_verts_indices(idx), 2) = uniform_extruded_v(tail_verts_indices(idx), 2);
+           uniform_extruded_smoothed_v(tail_verts_indices(idx), 3) = uniform_extruded_v(tail_verts_indices(idx), 3);
         end
         
         
