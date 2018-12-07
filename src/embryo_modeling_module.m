@@ -61,12 +61,28 @@ end
 %   now switch to matrix config pipeline
 % ---------------------------
 
-tail_nuc_name = 'ABprpppapap';
+tail_nuc_name = '';
 
 tail_nuc_name_2 = 'ABplpppapap';
-tail_nuc_name_3 = 'ABprppppppp';
-tail_nuc_name_4 = 'Cpappv';
-tail_nuc_name_5 = 'ABplppppppp';
+tail_nuc_name_3 = '';
+tail_nuc_name_4 = '';
+tail_nuc_name_5 = '';
+
+% use these to fix the erosion problems in the tail
+AIAL = 'ABplppaappa';
+AIAL_x = 0;
+AIAL_y = 0;
+AIAL_z = 0;
+
+hyp10 = 'ABprppppppp'; %hyp10
+hyp10_x = 0;
+hyp10_y = 0;
+hyp10_z = 0;
+
+siavr = 'ABprpapappa'; % siavr
+siavr_x = 0;
+siavr_y = 0;
+siavr_z = 0;
 
 % read the embryo configuation file: 
 % start time, end time, resource location, dimension y (rows), dimensions x (columns), comments
@@ -798,16 +814,7 @@ for i = 1:5
         % extrude each vertex in the direction of its normal
         % overcompensate because the smoothing operation will
         % significantly dilute the shape
-        translation_amount = 0;
-        if i == 1
-           translation_amount = 21; 
-        elseif i == 2 || i == 3
-            translation_amount = 20;
-        elseif i == 4
-            translation_amount = 19;
-        elseif i == 5
-            translation_amount = 18;
-        end
+        translation_amount = 27;
         extruded_verts = zeros(size(vertices));
         for vert_it=1:size(vertices, 1)
             if vertices(vert_it, 1) < 0
@@ -832,62 +839,164 @@ for i = 1:5
             extruded_verts(vert_it, 3) = z_extrude;
         end
         
-        [uniform_extruded_v, uniform_f] = LoopSubdivisionLimited(extruded_verts, faces, 0.05); 
+        [uniform_extruded_v, uniform_f] = LoopSubdivisionLimited(extruded_verts, faces, 0.05);
+        
+        
+        % find and save the neighborhood of the tail before smoothing so
+        % that it can be reset after the tail erosion from the smoothing
+        % operation
+        % check if the tail nuc is used in this mesh (only after t=311)
+        tail_verts_indices = zeros(100);
+        ctr = 1;
+        if t >= 311 && tail_indices_2(1, 1) ~= 0
+           neighborhood_threshold = 20;
+            for vert_idx=1:size(uniform_extruded_v)
+                vert_x = uniform_extruded_v(vert_idx, 1);
+                vert_y = uniform_extruded_v(vert_idx, 2);
+                vert_z = uniform_extruded_v(vert_idx, 3);
+                
+                nuc = [vert_x vert_y vert_z];
+                tail = [tail_x_2 tail_y_2 tail_z_2];
+                
+                nuc_tail_observations = [nuc; tail];
+                d_to_tail = pdist(nuc_tail_observations);
+                
+                if d_to_tail <= neighborhood_threshold
+                   if t >= 340
+                   % need some more reference cells here so we'll use the
+                   % embinfo
+                   cell_data_atT = embinfo(t).celldata;
+                   cell_names = embinfo(t).cellnames;
+                   
+                   for g=1:size(cell_names, 1)
+                      name = cell_names{g, 1};
+                      
+                      if strcmp(name, AIAL)
+                          cell_data = cell_data_atT(g, :);
+                          AIAL_x = cell_data(4);
+                          AIAL_y = cell_data(5);
+                          AIAL_z = cell_data(6);
+                      end
+                      
+                      if strcmp(name, hyp10)
+                         cell_data = cell_data_atT(g, :);
+                         hyp10_x = cell_data(4);
+                         hyp10_y = cell_data(5);
+                         hyp10_z = cell_data(6);
+                      end
+                      
+                      if strcmp(name, siavr)
+                         siavr_x = cell_data(4);
+                         siavr_y = cell_data(5);
+                         siavr_z = cell_data(6);
+                      end
+                   end
+                   
+                   AIAL_pt = [AIAL_x AIAL_y AIAL_z];
+                   hyp10_pt = [hyp10_x hyp10_y hyp10_z];
+                   
+                   nuc_AIAL = [nuc; AIAL_pt];
+                   nuc_hyp10 = [nuc; hyp10_pt];
+                   
+                   d_to_aial = pdist(nuc_AIAL);
+                   d_to_hyp10 = pdist(nuc_hyp10);
+                   
+                   aial_to_tail = [AIAL_pt; tail];
+                   d_aial_to_tail = pdist(aial_to_tail);
+                   
+                  
+                  % specific problems starting at t=344 wrp belly verts falling within neighbood of tail
+                  % we'll use a belly reference (SIAVR) and extrude it to
+                  % use as a delineator
+                  if t >= 344
+                      % first find the nearest neighbor to siavr
+                      min_distance = 1000;
+                      min_neighbor_idx = -1;
+                      for v_id=1:size(uniform_extruded_v)
+                         vx = uniform_extruded_v(v_id, 1);
+                         vy = uniform_extruded_v(v_id, 2);
+                         vz = uniform_extruded_v(v_id, 3);
+                         
+                         % make obsv and compute distance
+                         vxyz = [vx vy vz];
+                         siavr_pt = [siavr_x siavr_y siavr_z];
+                         obsvervation = [vxyz; siavr_pt];
+                         d_ = pdist(obsvervation);
+                         if d_ < min_distance 
+                            min_distance = d_;
+                            min_neighbor_idx = v_id;
+                         end
+                      end
+                      
+                      % use the nearest neighbor to find a vertex normal,
+                      % and use that to extrude SIAVR
+                      % ---- compute per vertex normals ----
+                      TR = triangulation(uniform_f, uniform_extruded_v);
+                      u_vert_norms = vertexNormal(TR);
+                      
+                      xdir = u_vert_norms(min_neighbor_idx, 1);
+                      ydir = u_vert_norms(min_neighbor_idx, 2);
+                      zdir = u_vert_norms(min_neighbor_idx, 3);
+                      
+                      x_extrude_siavr = siavr_x + (30*xdir);
+                      y_extrude_siavr = siavr_y + (30*ydir);
+                      z_extrude_siavr = siavr_z + (30*zdir);
+                      siavr_extruded = [x_extrude_siavr y_extrude_siavr z_extrude_siavr];
+                      
+                      nuc_extruded_siavr = [nuc; siavr_extruded];
+                      d_ = pdist(nuc_extruded_siavr);
+                      if d_to_hyp10 < d_
+                          tail_verts_indices(ctr) = vert_idx;
+                           ctr = ctr + 1;
+                      end
+                  end
+                   if d_to_tail < d_to_hyp10
+                        % either between hyp10 and tail, and closer to tail, or
+                        % anterior to the tail
+                        if d_to_aial > d_to_hyp10
+                           % it's between the tail and hyp10, move it to the tail
+                           tail_verts_indices(ctr) = vert_idx;
+                           ctr = ctr + 1;
+                        end
+                   else
+                       tail_verts_indices(ctr) = vert_idx;
+                       ctr = ctr + 1;
+                   end
+                else
+                    tail_verts_indices(ctr) = vert_idx;
+                    ctr = ctr + 1;       
+                end
+            end
+            end
+        end
         
         % smooth the mesh
-        num_smoothing_iterations = 1;
-        smoothed_uniform_extruded_v = uniform_extruded_v;
-        for p=1:num_smoothing_iterations
-            smoothed_uniform_extruded_v = lpflow_trismooth(smoothed_uniform_extruded_v, uniform_f);
+        uniform_extruded_smoothed_v = taubinsmooth(uniform_f, uniform_extruded_v, 25, 0.5, 0.53);
+        
+        % move the tail verts (that have just been eroded) to their original position
+        for idx=1:size(tail_verts_indices)
+           if tail_verts_indices(idx) == 0
+              break; 
+           end
+           
+           % reset these verts to their pre-smoothed position
+           uniform_extruded_smoothed_v(tail_verts_indices(idx), 1) = uniform_extruded_v(tail_verts_indices(idx), 1);
+           uniform_extruded_smoothed_v(tail_verts_indices(idx), 2) = uniform_extruded_v(tail_verts_indices(idx), 2);
+           uniform_extruded_smoothed_v(tail_verts_indices(idx), 3) = uniform_extruded_v(tail_verts_indices(idx), 3);
         end
-        fprintf('smoothed mesh\n');
-        toc;
+        
         
         % ensure correct poly winding
-        [corrected_faces, ~] = unifyMeshNormals(uniform_f, smoothed_uniform_extruded_v, 'alignTo', 'out');
+        [corrected_faces, ~] = unifyMeshNormals(uniform_f, ...
+                                uniform_extruded_smoothed_v, ...
+                                'alignTo', ...
+                                'out');
+                            
         
-        % check if the tail nuc is used in this mesh
-        if tail_indices(1, 1) ~= 0
-           % use the index to replace the smoothed tail vertex with its
-           % original position
-           smoothed_uniform_extruded_v(tail_vert_idx_updated, 1) = tail_x;
-           smoothed_uniform_extruded_v(tail_vert_idx_updated, 2) = tail_y;
-           smoothed_uniform_extruded_v(tail_vert_idx_updated, 3) = tail_z;
-        end
-        
-%         if tail_indices_2(1, 1) ~= 0
-%            use the index to replace the smoothed tail vertex with its
-%            original position
-%            smoothed_uniform_extruded_v(tail_vert_idx_2_updated, 1) = tail_x_2;
-%            smoothed_uniform_extruded_v(tail_vert_idx_2_updated, 2) = tail_y_2;
-%            smoothed_uniform_extruded_v(tail_vert_idx_2_updated, 3) = tail_z_2;
-%         end
-%         
-%         if tail_indices_3(1, 1) ~= 0
-%            use the index to replace the smoothed tail vertex with its
-%            original position
-%            smoothed_uniform_extruded_v(tail_vert_idx_3_updated, 1) = tail_x_3;
-%            smoothed_uniform_extruded_v(tail_vert_idx_3_updated, 2) = tail_y_3;
-%            smoothed_uniform_extruded_v(tail_vert_idx_3_updated, 3) = tail_z_3;
-%         end
-%         
-%         if tail_indices_4(1, 1) ~= 0
-%            use the index to replace the smoothed tail vertex with its
-%            original position    
-%            smoothed_uniform_extruded_v(tail_vert_idx_4_updated, 1) = tail_x_4;
-%            smoothed_uniform_extruded_v(tail_vert_idx_4_updated, 2) = tail_y_4;
-%            smoothed_uniform_extruded_v(tail_vert_idx_4_updated, 3) = tail_z_4;
-%         end
-%         
-%         if tail_indices_5(1, 1) ~= 0           
-%            smoothed_uniform_extruded_v(tail_vert_idx_5_updated, 1) = tail_x_5;
-%            smoothed_uniform_extruded_v(tail_vert_idx_5_updated, 2) = tail_y_5;
-%            smoothed_uniform_extruded_v(tail_vert_idx_5_updated, 3) = tail_z_5;
-%         end
         
         % save to obj file with time offset
         filename = sprintf('%s%s%s%s', output_path, embryo_str, num2str(t - offset), obj_ext_str);
-        saveObjFile(filename, smoothed_uniform_extruded_v, corrected_faces);
+        saveObjFile(filename, uniform_extruded_smoothed_v, corrected_faces);
     end
 end
 end

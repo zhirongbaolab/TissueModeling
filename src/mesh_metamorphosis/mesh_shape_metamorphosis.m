@@ -7,8 +7,8 @@
 % establishing dense correspondence and interpolating between frames
 
 % vars
-start_frame_mesh_filename = 'C:\Users\katzmanb\Desktop\TissueModeling\data\output\embryo\embryo_t265.obj';
-end_frame_mesh_filename = 'C:\Users\katzmanb\Desktop\TissueModeling\data\output\embryo\embryo_t289.obj';
+start_frame_mesh_filename = 'C:\Users\katzmanb\Desktop\TissueModeling/data/output/embryo/embryo_t265.obj';
+end_frame_mesh_filename = 'C:\Users\katzmanb\Desktop\TissueModeling/data/output/embryo/embryo_t289.obj';
 
 start_time = 265;
 end_time = 289;

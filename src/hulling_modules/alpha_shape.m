@@ -150,11 +150,12 @@ for t=1:size(pt_cloud_data, 3)
     
     % smooth the more uniform triangulated mesh to remove local variations
     tic;
-    num_smoothing_iterations = 1;
-    smoothed_uniform_v = uniform_v;
-    for i=1:num_smoothing_iterations
-        smoothed_uniform_v = lpflow_trismooth(smoothed_uniform_v, uniform_f);
-    end
+%     num_smoothing_iterations = 1;
+%     smoothed_uniform_v = uniform_v;
+%     for i=1:num_smoothing_iterations
+%         smoothed_uniform_v = lpflow_trismooth(smoothed_uniform_v, uniform_f);
+%     end
+    smoothed_uniform_v = taubinsmooth(uniform_f, uniform_v, 25, 0.5, 0.53);
     fprintf('smoothed the mesh\n');
     toc;
     

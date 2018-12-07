@@ -4,7 +4,7 @@ output_path = 'C:\Users\katzmanb\Desktop\TissueModeling\data\output\non_outgrowt
 t_ext = '_t';
 obj_ext_str = '.obj';
 offset = 1;
-start_time = 260;
+start_time = 259;
 
 non_outgrowth_config_filename = 'C:\Users\katzmanb\Desktop\TissueModeling\data\configurations\tissue_cells\non_outgrowth_cells.csv';
 num_non_outgrowth_cells = 35;
@@ -48,14 +48,14 @@ for t=260:360
             diam = cell_data(7);
             C = {x,y,z,diam,name};
             
-            non_outgrowth_nuc_data(itr, :, (t - start_time) + 1) = C;
+            non_outgrowth_nuc_data(itr, :, (t - 260) + offset) = C;
             itr = itr + 1;
         end
     end
 end
 
 % iterate over all time points
-for i=1:100
+for i=1:101
     
     % iterate over all cells at this time point
     for j=1:size(non_outgrowth_nuc_data, 1)
@@ -134,7 +134,7 @@ for i=1:100
         end
         
         filename = sprintf('%s%s%s%s%s', output_path, name,...
-             t_ext, num2str((start_time + i) - 1), obj_ext_str);
+             t_ext, num2str((start_time + i) - offset), obj_ext_str);
     
         saveObjFile(filename,...
             vertices, faces_flipped);
